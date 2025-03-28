@@ -141,7 +141,7 @@ model OrderItem {
   orderId    String  @db.ObjectId
   basePrice  Float
   offerPrice Float
-  Order      Order   @relation(fields: [orderId], references: [id])
+  order      Order   @relation(fields: [orderId], references: [id])
   product    Product @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([orderId])
@@ -156,7 +156,7 @@ model Payment {
   amount         Float
   method         String
   via            String
-  Order          Order   @relation(fields: [orderId], references: [id])
+  order          Order   @relation(fields: [orderId], references: [id])
 }
 
 model Product {
@@ -176,10 +176,10 @@ model Product {
   purchases        Int         @default(0)
   keywords         String[]
   earnings         Float       @default(0)
-  CartItem         CartItem[]
+  cartItems         CartItem[]
   images            Image[]
-  OrderItem        OrderItem[]
-  Category         Category    @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orderItems        OrderItem[]
+  category         Category    @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([slug])
 }
@@ -189,7 +189,7 @@ model Session {
   expires      DateTime
   sessionToken String   @unique
   userId       String   @db.ObjectId
-  User         User     @relation(fields: [userId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 model User {
@@ -204,11 +204,11 @@ model User {
   lastLogin     DateTime  @default(now())
   image         String?
   emailVerified DateTime?
-  Account       Account[]
+  accounts       Account[]
   addresses       Address[]
-  Cart          Cart?
-  Order         Order[]
-  Session       Session[]
+  cart          Cart?
+  order         Order[]
+  sessions       Session[]
 }
 
 model VerificationToken {
