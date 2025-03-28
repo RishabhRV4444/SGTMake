@@ -138,7 +138,7 @@ async function findCartWithProduct(userId: string) {
     include: {
       cartItems: {
         include: {
-          product: {
+          Product: {
             include: {
               images: true,
             },

@@ -56,14 +56,14 @@ export async function GET(req: NextRequest) {
           id: cartItem.productId,
           quantity: cartItem.quantity,
           basePrice:
-            cartItem.product.basePrice *
+            cartItem.Product.basePrice *
             (cartItem.quantity !== 0 ? cartItem.quantity : 1),
           offerPrice:
-            cartItem.product.offerPrice *
+            cartItem.Product.offerPrice *
             (cartItem.quantity !== 0 ? cartItem.quantity : 1),
-          title: cartItem.product.title,
+          title: cartItem.Product.title,
           image: getImageThumbnail(
-            { images: cartItem.product.images },
+            { images: cartItem.Product.images },
             cartItem.color,
           ),
         };
