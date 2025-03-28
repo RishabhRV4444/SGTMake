@@ -142,7 +142,7 @@ model OrderItem {
   basePrice  Float
   offerPrice Float
   Order      Order   @relation(fields: [orderId], references: [id])
-  Product    Product @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  product    Product @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([orderId])
   @@index([productId])
