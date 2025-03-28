@@ -106,7 +106,7 @@ async function findGuestUserWithProduct(guestId: string) {
         include: {
           cartItems: {
             include: {
-              Product: {
+              product: {
                 include: {
                   images: true,
                 },
@@ -138,7 +138,7 @@ async function findCartWithProduct(userId: string) {
     include: {
       cartItems: {
         include: {
-          Product: {
+          product: {
             include: {
               images: true,
             },
