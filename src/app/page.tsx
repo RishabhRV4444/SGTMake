@@ -9,7 +9,6 @@ import Image from "next/image";
 import Navbar from "./components/Navbar";
 import Services from "@/app/components/Services";
 import IndustryComponent from "@/app/components/IndustryComponent";
-import FeatureProduct from "@/app/components/Feature";
 import Footer from "@/app/components/Footer";
 import ToolTip from "./components/ToolTip";
 import Choose from "@/app/components/Choose";

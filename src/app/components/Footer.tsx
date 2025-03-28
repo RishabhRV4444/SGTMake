@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { Link as ScrollLink } from "react-scroll";
 import Link  from 'next/link'
+import Image from "next/image";
 const Footer = () => {
     const sections = [{ name: "Home", link: "home" }, { name: "Services", link: "services" },{ name: "Choose Us", link: "choose" }, { name: "About Us", link: "serve" }];
      const [activeSection, setActiveSection] = useState("home");
@@ -10,7 +11,7 @@ const Footer = () => {
         <footer className="bg-[#18191A] text-white p-8 mt-8">
             <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 text-center max-w-6xl">
                 <div className=" flex items-center flex-col">
-                    <img src="/logo-white.png" alt="Logo" className="w-32 mb-4 " />
+                    <Image height={40} width={50} src="/logo-white.png" alt="Logo" className="w-32 mb-4 " />
           
                     <div className="flex space-x-3 mt-4 text-xl">
                         <Link href="https://www.facebook.com/share/1XKtj5HDHx/" ><FaFacebook size={30}/></Link>
