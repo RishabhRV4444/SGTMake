@@ -205,7 +205,7 @@ model User {
   image         String?
   emailVerified DateTime?
   Account       Account[]
-  Address       Address[]
+  addresses       Address[]
   Cart          Cart?
   Order         Order[]
   Session       Session[]

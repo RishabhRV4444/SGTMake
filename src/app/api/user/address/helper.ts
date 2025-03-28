@@ -1,6 +1,6 @@
 import { db } from "@/lib/prisma";
 
-async function getAddress(address_id: number, userId: string) {
+async function getAddress(address_id: string, userId: string) {
   return await db.address.findUnique({
     where: {
       address_id,
