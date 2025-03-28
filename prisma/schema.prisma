@@ -130,7 +130,7 @@ model Order {
   Address          Address     @relation(fields: [addressId], references: [id])
   User             User        @relation(fields: [userId], references: [id])
   orderItems        OrderItem[]
-  Payment          Payment?
+  payment          Payment?
 }
 
 model OrderItem {
