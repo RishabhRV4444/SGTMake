@@ -127,8 +127,8 @@ model Order {
   payment_verified Boolean     @default(false)
   status           String      @default("pending")
   addressId        String      @db.ObjectId
-  Address          Address     @relation(fields: [addressId], references: [id])
-  User             User        @relation(fields: [userId], references: [id])
+  address          Address     @relation(fields: [addressId], references: [id])
+  user             User        @relation(fields: [userId], references: [id])
   orderItems        OrderItem[]
   payment          Payment?
 }
