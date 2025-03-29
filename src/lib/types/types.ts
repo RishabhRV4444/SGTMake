@@ -88,7 +88,7 @@ export type ProductResProps = Res & {
 };
 
 export type CartItemProps = {
-  itemId: number;
+  itemId: string;
   pid: string;
   slug: string;
   title: string;

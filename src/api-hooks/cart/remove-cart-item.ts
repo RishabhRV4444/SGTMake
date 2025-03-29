@@ -3,7 +3,7 @@ import { CartItemRes } from "@/lib/types/types";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-async function removeCartItem(itemId: number) {
+async function removeCartItem(itemId: string) {
   const { data } = await axios.delete(`/api/user/cart?itemId=${itemId}`);
   return data as CartItemRes;
 }
