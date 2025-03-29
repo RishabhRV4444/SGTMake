@@ -12,7 +12,7 @@ const RelatedProducts = async ({
   categoryId,
   pid,
 }: {
-  categoryId: number;
+  categoryId: string;
   pid: string;
 }) => {
   const relatedProducts = await getFilteredProduct({
