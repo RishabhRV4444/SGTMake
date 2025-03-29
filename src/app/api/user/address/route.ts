@@ -148,7 +148,7 @@ export async function DELETE(req: NextRequest) {
       return error400("Missing user ID in the session.", { user: null });
     }
     const userId = session.user.id;
-    const address_id = parseInt(req.nextUrl.searchParams.get("id") || "");
+    const address_id = req.nextUrl.searchParams.get("id") || "";
 
     if (!address_id) {
       return error400("Address id missing!", {
