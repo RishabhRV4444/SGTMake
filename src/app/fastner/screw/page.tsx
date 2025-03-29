@@ -2,11 +2,23 @@
 
 import { useState } from 'react';
 
-const ScrewSelector = () => {
-  const [selectedOptions, setSelectedOptions] = useState({
+// Define the type for the selected options
+interface SelectedOptions {
+  headType: string;
+  driveType: string;
+  feature: string;
+  size: string | number;
+  length: string | number;
+  material: string;
+  quantity: number;
+  remarks: string;
+}
+
+const ScrewSelector: React.FC = () => {
+  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({
     headType: '',
     driveType: '',
-    feature:'',
+    feature: '',
     size: '',
     length: '',
     material: '',
@@ -14,14 +26,14 @@ const ScrewSelector = () => {
     remarks: '',
   });
 
-  const toggleSelection = (category, value) => {
+  const toggleSelection = (category: keyof SelectedOptions, value: string | number) => {
     setSelectedOptions((prev) => ({
       ...prev,
-      [category]: prev[category] === value ? '' : value
+      [category]: prev[category] === value ? '' : value,
     }));
   };
 
-  const handleQuantityChange = (change) => {
+  const handleQuantityChange = (change: number) => {
     setSelectedOptions((prev) => ({
       ...prev,
       quantity: Math.max(1, prev.quantity + change),
@@ -86,7 +98,7 @@ const ScrewSelector = () => {
       {/* Size */}
       <h2 className="text-lg font-bold">Size</h2>
       <div className="flex flex-wrap gap-2">
-        {[3,4,5].map((size) => (
+        {[3, 4, 5].map((size) => (
           <button
             key={size}
             className={`p-2 border rounded-lg transition ${
@@ -118,7 +130,7 @@ const ScrewSelector = () => {
       {/* Material Type */}
       <h2 className="text-lg font-bold">Material Type</h2>
       <div className="flex flex-wrap gap-2">
-        {["MS","Stainless Steel"].map((material) => (
+        {["MS", "Stainless Steel"].map((material) => (
           <button
             key={material}
             className={`p-2 border rounded-lg transition ${

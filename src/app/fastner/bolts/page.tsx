@@ -2,8 +2,19 @@
 
 import { useState } from 'react';
 
-const BoltSelector = () => {
-  const [selectedOptions, setSelectedOptions] = useState({
+// Define the type for the selected options
+
+interface SelectedOptions {
+  headType: string;
+  driveType: string;
+  size: string;
+  length: string | number;
+  material: string;
+  quantity: number;
+  remarks: string;
+}
+const BoltSelector: React.FC = () => {
+  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({
     headType: '',
     driveType: '',
     size: '',
@@ -13,14 +24,14 @@ const BoltSelector = () => {
     remarks: '',
   });
 
-  const toggleSelection = (category, value) => {
+  const toggleSelection = (category: keyof SelectedOptions, value: string | number) => {
     setSelectedOptions((prev) => ({
       ...prev,
-      [category]: prev[category] === value ? '' : value
+      [category]: prev[category] === value ? '' : value,
     }));
   };
 
-  const handleQuantityChange = (change) => {
+  const handleQuantityChange = (change: number) => {
     setSelectedOptions((prev) => ({
       ...prev,
       quantity: Math.max(1, prev.quantity + change),

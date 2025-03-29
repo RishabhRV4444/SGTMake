@@ -2,24 +2,34 @@
 
 import { useState } from 'react';
 
-const SandOffSelector = () => {
-  const [selectedOptions, setSelectedOptions] = useState({
+// Define the type for the selected options
+interface SelectedOptions {
+  size: string;
+  length: string | number;
+  threadLength: string | number;
+  material: string;
+  quantity: number;
+  remarks: string;
+}
+
+const SandOffSelector: React.FC = () => {
+  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({
     size: '',
-    length:'',
-    threadLength:'',
+    length: '',
+    threadLength: '',
     material: '',
     quantity: 1,
     remarks: '',
   });
 
-  const toggleSelection = (category, value) => {
+  const toggleSelection = (category: keyof SelectedOptions, value: string | number) => {
     setSelectedOptions((prev) => ({
       ...prev,
-      [category]: prev[category] === value ? '' : value
+      [category]: prev[category] === value ? '' : value,
     }));
   };
 
-  const handleQuantityChange = (change) => {
+  const handleQuantityChange = (change: number) => {
     setSelectedOptions((prev) => ({
       ...prev,
       quantity: Math.max(1, prev.quantity + change),
@@ -33,11 +43,9 @@ const SandOffSelector = () => {
 
   return (
     <div className="p-7 max-w-lg mx-auto bg-white shadow-lg rounded-lg space-y-4">
-      
-
       {/* Size */}
       <h2 className="text-lg font-bold">Size</h2>
-      <p className='text-sm text-gray-400'>Email us for more sizes which are not available here</p>
+      <p className="text-sm text-gray-400">Email us for more sizes which are not available here</p>
       <div className="flex flex-wrap gap-2">
         {["M3", "M4", "M5", "M6"].map((size) => (
           <button
@@ -51,11 +59,11 @@ const SandOffSelector = () => {
           </button>
         ))}
       </div>
-    
-    {/* Length */}
-    <h2 className="text-lg font-bold">Length (mm)</h2>
+
+      {/* Length */}
+      <h2 className="text-lg font-bold">Length (mm)</h2>
       <div className="flex flex-wrap gap-2">
-        {[5, 10, 12, 15,20].map((len) => (
+        {[5, 10, 12, 15, 20].map((len) => (
           <button
             key={len}
             className={`p-2 border rounded-lg transition ${
@@ -83,7 +91,6 @@ const SandOffSelector = () => {
           </button>
         ))}
       </div>
-     
 
       {/* Material Type */}
       <h2 className="text-lg font-bold">Material Type</h2>

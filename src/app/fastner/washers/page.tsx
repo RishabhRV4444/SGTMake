@@ -1,25 +1,33 @@
-
 'use client';
 
 import { useState } from 'react';
 
-const WasherSelector = () => {
-  const [selectedOptions, setSelectedOptions] = useState({
-    type:'',
+// Define the type for the selected options
+interface SelectedOptions {
+  type: string;
+  size: string;
+  material: string;
+  quantity: number;
+  remarks: string;
+}
+
+const WasherSelector: React.FC = () => {
+  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({
+    type: '',
     size: '',
     material: '',
     quantity: 1,
     remarks: '',
   });
 
-  const toggleSelection = (category, value) => {
+  const toggleSelection = (category: keyof SelectedOptions, value: string) => {
     setSelectedOptions((prev) => ({
       ...prev,
-      [category]: prev[category] === value ? '' : value
+      [category]: prev[category] === value ? '' : value,
     }));
   };
 
-  const handleQuantityChange = (change) => {
+  const handleQuantityChange = (change: number) => {
     setSelectedOptions((prev) => ({
       ...prev,
       quantity: Math.max(1, prev.quantity + change),
@@ -33,9 +41,7 @@ const WasherSelector = () => {
 
   return (
     <div className="p-7 max-w-lg mx-auto bg-white shadow-lg rounded-lg space-y-4">
-      
-
-      {/* Head Type */}
+      {/* Type */}
       <h2 className="text-lg font-bold">Type</h2>
       <div className="flex flex-wrap gap-2">
         {["Flat", "Spring Washer"].map((type) => (
@@ -54,7 +60,7 @@ const WasherSelector = () => {
       {/* Size */}
       <h2 className="text-lg font-bold">Size</h2>
       <div className="flex flex-wrap gap-2">
-        {["M3", "M4", "M5", "M6","M8"].map((size) => (
+        {["M3", "M4", "M5", "M6", "M8"].map((size) => (
           <button
             key={size}
             className={`p-2 border rounded-lg transition ${
@@ -66,14 +72,11 @@ const WasherSelector = () => {
           </button>
         ))}
       </div>
-    
-    
-     
 
       {/* Material Type */}
       <h2 className="text-lg font-bold">Material Type</h2>
       <div className="flex flex-wrap gap-2">
-        {["Nylon","MS", "Stainless Steel"].map((material) => (
+        {["Nylon", "MS", "Stainless Steel"].map((material) => (
           <button
             key={material}
             className={`p-2 border rounded-lg transition ${

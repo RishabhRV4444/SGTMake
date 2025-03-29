@@ -1,23 +1,29 @@
-
 'use client';
 
 import { useState } from 'react';
 
-const RevnutSelector = () => {
-  const [selectedOptions, setSelectedOptions] = useState({
+// Define the type for the selected options
+interface SelectedOptions {
+  size: string;
+  quantity: number;
+  remarks: string;
+}
+
+const RevnutSelector: React.FC = () => {
+  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({
     size: '',
     quantity: 1,
     remarks: '',
   });
 
-  const toggleSelection = (category, value) => {
+  const toggleSelection = (category: keyof SelectedOptions, value: string | number) => {
     setSelectedOptions((prev) => ({
       ...prev,
-      [category]: prev[category] === value ? '' : value
+      [category]: prev[category] === value ? '' : value,
     }));
   };
 
-  const handleQuantityChange = (change) => {
+  const handleQuantityChange = (change: number) => {
     setSelectedOptions((prev) => ({
       ...prev,
       quantity: Math.max(1, prev.quantity + change),
@@ -31,13 +37,10 @@ const RevnutSelector = () => {
 
   return (
     <div className="p-7 max-w-lg mx-auto bg-white shadow-lg rounded-lg space-y-4">
-      
-
-
       {/* Size */}
       <h2 className="text-lg font-bold">Size</h2>
       <div className="flex flex-wrap gap-2">
-        {["M3", "M4", "M5", "M6","M8"].map((size) => (
+        {["M3", "M4", "M5", "M6", "M8"].map((size) => (
           <button
             key={size}
             className={`p-2 border rounded-lg transition ${
@@ -49,11 +52,6 @@ const RevnutSelector = () => {
           </button>
         ))}
       </div>
-    
-    
-     
-
-      
 
       {/* Quantity */}
       <h2 className="text-lg font-bold">Quantity (pcs)</h2>

@@ -2,7 +2,7 @@ import axios from "@/config/axios.config";
 import { PaymentRes } from "@/lib/types/types";
 import { useMutation } from "@tanstack/react-query";
 
-const handlePayment = async (addressId: number) => {
+const handlePayment = async (addressId: string) => {
   const { data } = await axios.post("api/payment", { addressId });
   return data as PaymentRes;
 };
