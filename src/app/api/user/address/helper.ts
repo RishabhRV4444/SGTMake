@@ -42,7 +42,7 @@ async function setDefaultFalseAddress(userId: string) {
   });
 }
 
-async function updateAddress(data: any, address_id: number, userId: string) {
+async function updateAddress(data: any, address_id: string, userId: string) {
   return await db.address.update({
     data,
     where: {
@@ -52,7 +52,7 @@ async function updateAddress(data: any, address_id: number, userId: string) {
   });
 }
 
-async function deleteAddress(address_id: number, userId: string) {
+async function deleteAddress(address_id: string, userId: string) {
   return await db.address.delete({
     where: {
       id:address_id,
@@ -61,7 +61,7 @@ async function deleteAddress(address_id: number, userId: string) {
   });
 }
 
-async function checkAddressPresentInOrder(addressId: number, userId: string) {
+async function checkAddressPresentInOrder(addressId: string, userId: string) {
   return await db.order.findFirst({
     where: {
       addressId,
@@ -70,14 +70,14 @@ async function checkAddressPresentInOrder(addressId: number, userId: string) {
   });
 }
 
-async function markAsDeletedAddress(userId: string, address_id: number) {
+async function markAsDeletedAddress(userId: string, address_id: string) {
   return await db.address.update({
     data: {
       is_deleted: true,
     },
     where: {
       userId,
-      address_id,
+      id:address_id,
     },
   });
 }
