@@ -168,7 +168,7 @@ function generateCategoryStructure(
   }
 
   const parents: string[] = [];
-  let currentParent: number | null = selectedCategoryData.id;
+  let currentParent: string | null = selectedCategoryData.id;
 
   while (currentParent !== null) {
     const parentCategory = data.find(

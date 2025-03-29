@@ -15,9 +15,9 @@ const PrivateLayout = async ({ children }: LayoutProps) => {
       <ShowPrivateNavbar>
         <nav className="mb-5 bg-white">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-            {/* <Link href="/">
+            <Link href="/">
               <Image src="/logo.png" alt="Logo" width={74} height={74} />
-            </Link> */}
+            </Link>
             <Profile session={session} />
           </div>
         </nav>
