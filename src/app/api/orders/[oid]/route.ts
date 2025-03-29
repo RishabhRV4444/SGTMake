@@ -71,7 +71,7 @@ export async function GET(
 
     const order = await db.order.findUnique({
       where: {
-        id: orderId,
+        orderID: orderId,
       },
       include: {
         orderItems: {
@@ -123,6 +123,7 @@ export async function GET(
       },
     });
   } catch (error) {
+    console.log(error)
     return error500({ order: null });
   }
 }

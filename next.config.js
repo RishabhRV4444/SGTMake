@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     images: {
-        domains: ["res.cloudinary.com"]
+        domains: ["res.cloudinary.com","pagedone.io"]
     },
     redirects: async () => {
         return [

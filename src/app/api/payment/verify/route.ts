@@ -18,16 +18,18 @@ export async function POST(req: NextRequest) {
     const data = await req.json();
     const payloadEntity = data.payload.payment.entity;
     const order_id = payloadEntity.order_id.split("_")[1].toUpperCase();
+    console.log("verify")
 
     if (data.event === "payment.failed") {
+      console.log("failed")
       await db.order.delete({
         where: {
-          id: order_id,
+          orderID: order_id,
         },
       });
       return error400("Payment failed", { verified: false });
     }
-
+    console.log("pass")
     const shasum = crypto.createHmac(
       "sha256",
       process.env.RAZORPAY_WEBHOOK_SECRET!,
@@ -75,6 +77,7 @@ export async function POST(req: NextRequest) {
     }
     return success200({ verified: true });
   } catch (error) {
+    console.log(error)
     return error500({ verified: false });
   }
 }

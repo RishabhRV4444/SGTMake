@@ -45,7 +45,7 @@ export default function IndustryComponent() {
 const Card = ({ tag, img, active }:{ tag:string, img:string, active:boolean }) => {
     return (
         <div className={`relative rounded-xl overflow-hidden shadow-lg transition-transform ${active ? 'scale-105' : 'scale-100'}`}>
-            <Image height={40} width={50} src={img} alt={tag} className="w-full h-60 object-cover"/>
+            <Image height={200} width={70} src={img} alt={tag} className="w-full h-80 object-cover"/>
             <div className="absolute bottom-2 left-2 bg-white px-3 py-1 rounded-full text-sm font-semibold shadow">
                 {tag}
             </div>

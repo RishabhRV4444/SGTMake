@@ -19,7 +19,7 @@ const PlaceOrder = () => {
   function makePayment(data: PaymentRes) {
     const options = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-      name: "GadgeXhub",
+      name: "SGT Make",
       currency: data.currency,
       amount: data.amount,
       order_id: data.id,
@@ -48,8 +48,8 @@ const PlaceOrder = () => {
 
   function placeOrder() {
     setProcessing(true);
-    if (deliveryAddress?.address_id)
-      payment_mutation.mutate(deliveryAddress.address_id);
+    if (deliveryAddress?.id)
+      payment_mutation.mutate(deliveryAddress.id);
   }
 
   return (
@@ -62,7 +62,7 @@ const PlaceOrder = () => {
         color="primary"
         onClick={placeOrder}
         isLoading={payment_mutation.isLoading}
-        isDisabled={!deliveryAddress?.address_id}
+        isDisabled={!deliveryAddress?.id}
         className="w-full"
       >
         Place order

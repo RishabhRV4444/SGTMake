@@ -42,7 +42,7 @@ const ChangeAddressDialog = ({
           <DialogTitle>Choose Delivery Address</DialogTitle>
           <RadioGroup
             label="Addresses"
-            defaultValue={selectedAddress?.address_id.toString()}
+            defaultValue={selectedAddress?.id.toString()}
             description="Selected address cannot be changed after order placed."
             classNames={{
               label: "text-sm font-medium text-black",
@@ -50,13 +50,13 @@ const ChangeAddressDialog = ({
             onValueChange={(address_id) =>
               setSelectedAddress(
                 addresses?.find(
-                  (address) => address.address_id === Number(address_id),
+                  (address) => address.id === address_id,
                 ),
               )
             }
           >
             {addresses?.map((address, i) => (
-              <CustomRadio value={address.address_id.toString()} key={i}>
+              <CustomRadio value={address.id.toString()} key={i}>
                 <AddressCard address={address} />
               </CustomRadio>
             ))}

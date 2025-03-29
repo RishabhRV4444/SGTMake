@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
         return success200({ item: [] });
       }
       const guestUser = await findGuestUserWithProduct(guestId);
-
+      console.log(guestUser)
       if (!guestUser || !guestUser.cart) {
         const res = error400("Invalid Guest ID.", { item: null });
         res.cookies.delete("guest-id");
@@ -141,7 +141,7 @@ export async function GET(req: NextRequest) {
     }
 
     const cart = await findCartWithProduct(userId);
-
+    // console.log(cart)
     if (!cart || cart.cartItems.length === 0) {
       const res = success200({ item: [] });
       res.cookies.delete("guest-id");
@@ -151,17 +151,17 @@ export async function GET(req: NextRequest) {
     const cartItemsArray = cart.cartItems.map((cartItem) => ({
       itemId: cartItem.id,
       pid: cartItem.productId,
-      slug: cartItem.Product.slug,
-      title: cartItem.Product.title,
+      slug: cartItem.product.slug,
+      title: cartItem.product.title,
       image: getImageThumbnail(
-        { images: cartItem.Product.images },
+        { images: cartItem.product.images },
         cartItem.color,
       ),
-      basePrice: cartItem.Product.basePrice,
-      offerPrice: cartItem.Product.offerPrice,
+      basePrice: cartItem.product.basePrice,
+      offerPrice: cartItem.product.offerPrice,
       color: cartItem.color,
       quantity: cartItem.quantity,
-      url: makeUrl(cartItem.Product.slug, cartItem.productId, cartItem.color),
+      url: makeUrl(cartItem.product.slug, cartItem.productId, cartItem.color),
     }));
 
     const res = success200({ item: cartItemsArray.reverse() });

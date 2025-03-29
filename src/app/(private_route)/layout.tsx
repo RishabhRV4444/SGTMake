@@ -3,6 +3,7 @@ import ShowPrivateNavbar from "@/components/navbar/show-private-navbar";
 import { authOptions } from "@/lib/auth";
 import { LayoutProps } from "@/lib/types/types";
 import { getServerSession } from "next-auth";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -14,9 +15,9 @@ const PrivateLayout = async ({ children }: LayoutProps) => {
       <ShowPrivateNavbar>
         <nav className="mb-5 bg-white">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-            <Link href="/">
-              <h1 className="text-lg font-semibold md:text-2xl">GadgeXhub</h1>
-            </Link>
+            {/* <Link href="/">
+              <Image src="/logo.png" alt="Logo" width={74} height={74} />
+            </Link> */}
             <Profile session={session} />
           </div>
         </nav>

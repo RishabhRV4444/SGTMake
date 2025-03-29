@@ -38,12 +38,12 @@ async function createOrder(
   orderId: string,
   amount: number,
   userId: string,
-  addressId: number,
+  addressId: string,
   orderItems: any,
 ) {
   return await db.order.create({
     data: {
-      id: orderId,
+      orderID: orderId,
       total: amount,
       userId,
       addressId,
@@ -63,7 +63,7 @@ async function updateOrder(order_id: string) {
       status: "placed",
     },
     where: {
-      id: order_id,
+      orderID: order_id,
     },
     include: {
       orderItems: true

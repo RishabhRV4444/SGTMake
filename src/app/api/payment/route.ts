@@ -23,7 +23,6 @@ export async function POST(req: NextRequest) {
 
     const checkoutCookie = req.cookies.get("checkout")?.value || "";
     const session = await getServerSession(authOptions);
-
     if (!session || !session.user || !session.user.id) {
       return error400("Missing user ID in the session.", { user: null });
     }
@@ -93,6 +92,13 @@ export async function POST(req: NextRequest) {
     await createOrder(order_id, amount, userId, addressId, orderItems);
 
     if (checkoutCookie === "") {
+      await db.cartItem.deleteMany({
+        where: {
+          cart: {
+            userId: userId,
+          },
+        },
+      });
       await db.cart.delete({
         where: {
           userId: userId,
@@ -107,6 +113,7 @@ export async function POST(req: NextRequest) {
       orderId: order_id,
     });
   } catch (error) {
+    console.log(error)
     return error500({});
   }
 }

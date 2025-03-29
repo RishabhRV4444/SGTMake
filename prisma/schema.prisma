@@ -119,6 +119,7 @@ model Image {
 
 model Order {
   id               String      @id @default(auto()) @map("_id") @db.ObjectId
+  orderID   String   @unique
   orderDate        DateTime    @default(now())
   packedDate       DateTime?
   deliveredDate    DateTime?

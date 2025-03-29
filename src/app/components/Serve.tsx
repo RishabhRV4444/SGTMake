@@ -65,11 +65,11 @@ const ServeCard = ({ img, head, desc }) => {
 const ServeCard2 = ({ img, head, desc }  ) => {
     return (
         <div className="flex flex-col-reverse md:flex-row justify-center items-center bg-white rounded-2xl shadow p-6 m-5 gap-6  ">
-            <div className="mt-7 md:mt-0 flex flex-col  sm:w-[65%] w-full pl-0 md:pl-10">
+            <div className="mt-7 md:mt-0 flex flex-col  w-full pl-0 md:pl-10">
                 <h2 className="text-2xl font-bold mb-4">{head}</h2>
                 <p className="text-gray-600 text-lg">{desc}</p>
             </div>
-            <div className="sm:w-[35%] w-full rounded-2xl overflow-hidden flex justify-center items-center">
+            <div className=" w-full rounded-2xl overflow-hidden flex justify-center items-center">
                 <Image src={img} alt={head} height={500} width={500} className="object-fit rounded-xl" />
             </div>
         </div>

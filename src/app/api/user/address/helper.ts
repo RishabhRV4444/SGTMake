@@ -3,7 +3,7 @@ import { db } from "@/lib/prisma";
 async function getAddress(address_id: string, userId: string) {
   return await db.address.findUnique({
     where: {
-      address_id,
+      id:address_id,
       userId,
     },
   });
@@ -46,7 +46,7 @@ async function updateAddress(data: any, address_id: number, userId: string) {
   return await db.address.update({
     data,
     where: {
-      address_id,
+      id:address_id,
       userId,
     },
   });
@@ -55,7 +55,7 @@ async function updateAddress(data: any, address_id: number, userId: string) {
 async function deleteAddress(address_id: number, userId: string) {
   return await db.address.delete({
     where: {
-      address_id,
+      id:address_id,
       userId,
     },
   });

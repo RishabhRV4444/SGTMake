@@ -56,14 +56,14 @@ export async function GET(req: NextRequest) {
           id: cartItem.productId,
           quantity: cartItem.quantity,
           basePrice:
-            cartItem.Product.basePrice *
+            cartItem.product.basePrice *
             (cartItem.quantity !== 0 ? cartItem.quantity : 1),
           offerPrice:
-            cartItem.Product.offerPrice *
+            cartItem.product.offerPrice *
             (cartItem.quantity !== 0 ? cartItem.quantity : 1),
-          title: cartItem.Product.title,
+          title: cartItem.product.title,
           image: getImageThumbnail(
-            { images: cartItem.Product.images },
+            { images: cartItem.product.images },
             cartItem.color,
           ),
         };
@@ -74,6 +74,7 @@ export async function GET(req: NextRequest) {
       });
     }
   } catch (error) {
+    console.log(error)
     return error500({ products: null });
   }
 }

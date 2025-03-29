@@ -38,9 +38,9 @@ const CustomerReview = () => {
   };
 
   return (
-    <section className="p-8 flex flex-col md:flex-row items-center gap-10 max-w-7xl mx-auto">
+    <section className="p-8 flex flex-col md:flex-row items-center gap-10 max-w-6xl mx-auto">
       {/* Left Section */}
-      <div className="md:w-1/3 flex flex-col justify-center">
+      <div className="md:w-1/2 flex flex-col justify-center">
         <h2 className="text-3xl font-bold mb-4 text-gray-800">Hear From Our Customer Review</h2>
         <p className="text-gray-600 mb-6">
         Hear from real customers who have experienced our products and services firsthand. Read their honest feedback and earn why they choose us.
@@ -55,7 +55,7 @@ const CustomerReview = () => {
           </button>
           <button
             onClick={handleNext}
-            className="p-3 bg-[hsla(18,98%,50%,1)] hover:bg-orange-600 text-white rounded-full transition"
+            className="p-3 bg-orange-400 hover:bg-orange-600 text-white rounded-full transition"
             aria-label="Next Review"
           >
             <ChevronRight />
