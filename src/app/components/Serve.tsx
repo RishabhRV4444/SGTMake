@@ -48,7 +48,7 @@ export default function Serve() {
     );
 }
 
-const ServeCard = ({ img, head, desc }) => {
+const ServeCard = ({ img, head, desc }:any) => {
     return (
         <div className="flex flex-col md:flex-row  justify-center items-center bg-white rounded-2xl shadow p-6 m-5 gap-6 ">
             <div className="md:w-auto w-full rounded-2xl overflow-hidden flex justify-center items-center">
@@ -62,7 +62,7 @@ const ServeCard = ({ img, head, desc }) => {
     );
 };
 
-const ServeCard2 = ({ img, head, desc }  ) => {
+const ServeCard2 = ({ img, head, desc }:any  ) => {
     return (
         <div className="flex flex-col-reverse md:flex-row justify-center items-center bg-white rounded-2xl shadow p-6 m-5 gap-6  ">
             <div className="mt-7 md:mt-0 flex flex-col  w-full pl-0 md:pl-10">

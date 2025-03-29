@@ -47,7 +47,7 @@ export default function Choose(){
     </>
 }
 
-const ChooseCard = ({img,head,desc}) => {
+const ChooseCard = ({img,head,desc}:any) => {
     return<>
         <div className="w-full max-w-sm h-auto shadow-xl rounded-xl bg-white p-4 border border-orange-400 cursor-pointer hover:bg-orange-300 transition-all duration-300 text-gray-500 hover:text-gray-800 hover:scale-110">
             <div className="justify-center p-7">
