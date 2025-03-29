@@ -15,7 +15,7 @@ async function getAllProducts(page: number) {
 }
 
 async function getProductsWithCategories(
-  categories: Array<String>,
+  categories: Array<string>,
   page: number,
 ) {
   return await db.category
