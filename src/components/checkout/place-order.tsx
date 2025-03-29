@@ -49,7 +49,7 @@ const PlaceOrder = () => {
   function placeOrder() {
     setProcessing(true);
     if (deliveryAddress?.id)
-      payment_mutation.mutate(deliveryAddress.id);
+      payment_mutation.mutate(deliveryAddress?.id);
   }
 
   return (

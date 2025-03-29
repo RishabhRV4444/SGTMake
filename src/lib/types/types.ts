@@ -52,7 +52,7 @@ export type UserResProps = {
 };
 
 export type AddressProps = z.infer<typeof ZodAddressSchema> & {
-  address_id: number;
+  id: string;
 };
 
 export type AddressResProps = {
