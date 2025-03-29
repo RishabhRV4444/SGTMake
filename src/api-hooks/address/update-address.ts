@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 interface UpdateAddressProps {
-  address_id: number | undefined;
+  address_id: string | undefined;
   data: z.infer<typeof ZodAddressSchema>;
 }
 

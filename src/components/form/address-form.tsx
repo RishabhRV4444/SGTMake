@@ -71,7 +71,7 @@ const AddressForm = ({
       create_mutation.mutate(values);
     } else {
       update_mutation.mutate({
-        address_id: address?.address_id,
+        address_id: address?.id,
         data: values,
       });
     }
@@ -275,7 +275,7 @@ const AddressForm = ({
             <div className="md:w-full">
               {!delete_mutation.isLoading ? (
                 <DeleteAddressModal
-                  onDelete={() => delete_mutation.mutate(address?.address_id!)}
+                  onDelete={() => delete_mutation.mutate(address?.id!)}
                 />
               ) : (
                 <Loader2 className="animate-spin text-destructive" />
