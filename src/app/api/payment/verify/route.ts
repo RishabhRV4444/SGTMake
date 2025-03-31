@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { error400, error500, success200 } from "@/lib/utils";
 import { createPayment, updateOrder } from "../helper";
 import { db } from "@/lib/prisma";
+import Razorpay from "razorpay";
 
 const getPaymentVia = (method: string, payload: any) => {
   if (method === "netbanking") return payload["bank"];
@@ -12,11 +13,14 @@ const getPaymentVia = (method: string, payload: any) => {
     return payload["card"].last4 + "," + payload["card"].network;
   } else return null;
 };
-
+const razorpay = new Razorpay({
+  key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
 export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
-    const payloadEntity = data.payload.payment.entity;
+    const payloadEntity = await razorpay.payments.fetch(data.payment_id);
     const order_id = payloadEntity.order_id.split("_")[1].toUpperCase();
     console.log("verify")
 
@@ -32,13 +36,19 @@ export async function POST(req: NextRequest) {
     console.log("pass")
     const shasum = crypto.createHmac(
       "sha256",
-      process.env.RAZORPAY_WEBHOOK_SECRET!,
+      process.env.RAZORPAY_SECRET!,
     );
-    shasum.update(JSON.stringify(data));
+    
+    shasum.update(`${data.order_id}|${data.payment_id}`);
     const digest = shasum.digest("hex");
 
+    console.log(req.headers.get("x-razorpay-signature"))
+    console.log(digest)
+
     if (digest === req.headers.get("x-razorpay-signature")) {
+      console.log("payment verifed")
       const successOrder = await updateOrder(order_id);
+      console.log(successOrder)
       for (const order of successOrder.orderItems) {
         try {
           await db.product.update({
@@ -52,6 +62,7 @@ export async function POST(req: NextRequest) {
             },
           });
         } catch (error) {
+          console.log(error)
           throw error;
         }
       }
@@ -59,10 +70,10 @@ export async function POST(req: NextRequest) {
       await createPayment({
         rzr_order_id: payloadEntity.order_id,
         rzr_payment_id: payloadEntity.id,
-        orderId: order_id,
+        orderId: successOrder.id,
         method:
           payloadEntity.method === "card"
-            ? payloadEntity["card"].type + " card"
+            ? (payloadEntity["card"]?.type ?? "unknown") + " card"
             : payloadEntity.method,
         via: getPaymentVia(payloadEntity.method, payloadEntity),
         amount: Number(payloadEntity.amount) / 100,

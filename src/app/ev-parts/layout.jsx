@@ -1,5 +1,4 @@
 "use client";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Sidebar from "./Sidebar";
 import Link from "next/link";
@@ -9,7 +8,6 @@ const Layout = ({ children }) => {
   const path=usePathname();
   return (
     <>
-      <Navbar />
       <div className="flex items-center">
         <h2 className="text-3xl font-bold m-4">EV Parts</h2>
         <p className="text-lg text-gray-300"><Link href={"/ev-parts"}>{path.split('/')[1]}</Link>/{path.split("/")[2]}</p>

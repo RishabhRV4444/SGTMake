@@ -84,21 +84,16 @@ export async function POST(req: NextRequest) {
 
     const response = await razorpay.orders.create({
       amount: (amount * 100).toString(),
-      currency: "INR",
+      currency: "USD",
       receipt: uid(),
       payment_capture: true,
     });
+    // console.log(response)
     const order_id = response.id.split("_")[1].toUpperCase();
     await createOrder(order_id, amount, userId, addressId, orderItems);
 
     if (checkoutCookie === "") {
-      await db.cartItem.deleteMany({
-        where: {
-          cart: {
-            userId: userId,
-          },
-        },
-      });
+  
       await db.cart.delete({
         where: {
           userId: userId,

@@ -9,6 +9,7 @@ type ProductCardProps = {
   offerPrice: number;
   basePrice: number;
   stock: number;
+  pid: string;
 };
 
 const ProductCard = ({
@@ -17,16 +18,18 @@ const ProductCard = ({
   offerPrice,
   basePrice,
   stock,
+  pid,
+
 }: ProductCardProps) => {
   return (
-    <Card shadow="none" isPressable className="flex-1 bg-white" radius="md">
-      <CardBody className="flex-grow-0 overflow-visible p-0">
+    <Card shadow="none" isPressable className=" relative group flex-1 bg-gray-200 h-96" radius="md">
+      <CardBody className= "  flex-grow-0 overflow-visible group-hover:p-1 ">
         <Image
           as={NextImage}
           shadow="none"
           radius="lg"
-          width={300}
-          height={300}
+          width={400}
+          height={400}
           isZoomed
           alt={title}
           className="w-full overflow-hidden object-cover"
@@ -36,20 +39,22 @@ const ProductCard = ({
           src={process.env.NEXT_PUBLIC_IMAGE_URL + image}
         />
       </CardBody>
-      <CardFooter className="flex-col items-start pb-0 text-small">
-        <span className="text-[0.7rem] text-success">
-          Up to {calculatePercentage(basePrice, offerPrice)} OFF
-        </span>
-        <b className="cutoff-text text-left">{title}</b>
-        <p className="text-[0.7rem] text-destructive">
+      <CardFooter className="    bg-[#ffffff9d] backdrop-blur-md rounded-md  flex flex-col w-full  ">
+  
+        <div className="">
+                <h2 className="text-md font-semibold line-clamp-1">{title}</h2>
+                
+                <p><span className="text-orange-500 font-bold ">{formatCurrency(offerPrice)}
+                </span>  <span className="text-gray-400 line-through text-xs font-normal"> {formatCurrency(basePrice)}</span></p>
+                <p className="text-[0.7rem] text-destructive">
           {stock <= 5 && stock > 0 && `Hurry, only ${stock} left`}
         </p>
-      </CardFooter>
-      <div className="flex flex-1 items-end pb-3 ps-3">
-        <p className="flex-1 text-small">
-          From <span className="font-Roboto">{formatCurrency(offerPrice)}</span>
-        </p>
       </div>
+      {/* <div className="bg-orange-400 rounded-lg  p-3   scale-y-0 group-hover:scale-y-100 w-full transition-[transform] duration-300 h-0 group-hover:h-max ">
+          Add to Cart
+      </div> */}
+   
+      </CardFooter>
     </Card>
   );
 };

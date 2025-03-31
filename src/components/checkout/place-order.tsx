@@ -27,6 +27,19 @@ const PlaceOrder = () => {
       //   image: "",
       handler: async function (response: any) {
         if (response.razorpay_signature) {
+          const payload = {
+            order_id: response.razorpay_order_id ,
+            payment_id: response.razorpay_payment_id,
+          };
+
+          const res = await fetch("/api/payment/verify", {
+            method: "POST",
+            body: JSON.stringify(payload),
+            headers: {
+              "Content-Type": "application/json",
+              "x-razorpay-signature":response.razorpay_signature
+            },
+          });
           router.push(`/checkout/${data.orderId}`);
         } else {
           toast.error("Payment failed. Please contact support!");

@@ -16,7 +16,7 @@ function cn(...inputs: ClassValue[]) {
 function formatCurrency(amount: number) {
   const currencyFormatter = Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "INR",
+    currency: "USD",
   });
   const price = currencyFormatter.format(amount);
   return price.toString().split(".")[0];

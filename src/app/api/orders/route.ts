@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
           orderItem.color,
         ),
       ),
-      orderId: order.id,
+      orderId: order.orderID,
       orderDate: order.orderDate,
       status: order.status,
       payment_verified: order.payment_verified,
