@@ -84,7 +84,7 @@ export async function POST(req: NextRequest) {
 
     const response = await razorpay.orders.create({
       amount: (amount * 100).toString(),
-      currency: "USD",
+      currency: "INR",
       receipt: uid(),
       payment_capture: true,
     });
