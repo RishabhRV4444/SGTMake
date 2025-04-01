@@ -38,7 +38,7 @@ const ProductResults = () => {
           No products found!
         </h1>
       )}
-      <div className="grid auto-rows-auto grid-cols-2 items-stretch md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid auto-rows-auto grid-cols-2 items-stretch md:grid-cols-3 lg:grid-cols-3">
         {data?.pages.map((products, i) => (
           <Fragment key={i}>
             {products?.map((product, j) => (

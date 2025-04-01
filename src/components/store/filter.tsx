@@ -55,8 +55,8 @@ export const FilterLg = ({
   categories: CategoryStructure | null;
 }) => {
   return (
-    <div className="col-span-1 hidden h-fit w-full rounded-lg bg-white p-3 lg:block">
-      <ul className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+    <div className="col-span-1 hidden h-fit w-full rounded-lg  p-3 lg:block">
+      {/* <ul className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
         <li>
           <Link href={"/store"}>All</Link>
         </li>
@@ -70,9 +70,9 @@ export const FilterLg = ({
             </li>
           </Fragment>
         ))}
-      </ul>
-      <h1 className="mt-4 text-sm font-semibold">Categories</h1>
-      <hr className="my-1" />
+      </ul> */}
+      {/* <h1 className="mt-4 text-sm font-semibold">Categories</h1>
+      <hr className="my-1" /> */}
       <ul className="text-sm">
         <CategoryList categories={categories} />
       </ul>
@@ -95,7 +95,7 @@ function CategoryList({
               categories.parents.at(-1) || "",
             ) + `/${item.toLowerCase().replace(/[\/. ]/g, "-")}`
           }
-          className="flex cursor-pointer flex-row items-center gap-2 rounded-lg px-4 py-2 text-sm hover:bg-gray-200"
+          className="flex cursor-pointer flex-row items-center gap-2 rounded-lg px-6 py-4 text-sm  hover:bg-orange-200"
         >
           {item}
         </Link>

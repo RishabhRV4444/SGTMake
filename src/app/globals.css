@@ -87,9 +87,9 @@ html {
   display: flex;
   flex-direction: column;
 } */
-body::-webkit-scrollbar {
+/* body::-webkit-scrollbar {
   @apply hidden;
-}
+} */
 .scrollbar-thin::-webkit-scrollbar {
   @apply w-1.5;
 }

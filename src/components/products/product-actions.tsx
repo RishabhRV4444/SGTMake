@@ -96,7 +96,7 @@ const ProductActions = (props: ProductActionsProps) => {
         radius="none"
         color="danger"
         size="lg"
-        className="w-full uppercase"
+        className="w-full uppercase bg-orange-500"
       >
         Buy it now
       </Button>

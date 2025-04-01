@@ -3,13 +3,13 @@ export const ServicesData = [
             imgSrc: "/3d-designing.jpg",
             title: "3D Designing",
             description: "At SGTMake we provide designing solutions in CAD, any rough sketch or part, any drawing, or reverse engineering possible with our designing experts.",
-             link:"/pending-figma"
+             link:"/service/cncmaching"
         },
         {
             imgSrc: "/3d-printing.jpg",
             title: "3D Printing",
             description: "We create custom 3D-printed parts in plastic or metal, utilising various technologies to meet your design needs.",
-             link:"/pending-figma"
+             link:"/service/cncmaching"
         },
         {
             imgSrc: "/CNC-milling.jpg",

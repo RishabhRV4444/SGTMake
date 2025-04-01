@@ -60,13 +60,13 @@ export default async function page() {
         </div>
       ))}
       {/* <FeatureProduct/> */}
-      <Latest />
+      {/* <Latest /> */}
 
       <Choose/>
       <Serve/>
       <CustomerReview/>
       <GlobalDelivery/>
-      <ContactUs/>
+      {/* <ContactUs/> */}
       <Footer/>
 
  

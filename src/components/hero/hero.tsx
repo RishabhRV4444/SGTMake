@@ -57,7 +57,7 @@ const Hero = ({ slides }: { slides: HeroBanner[] }) => {
   }, [isPaused, progress, nextSlide]);
 
   return (
-    <section className="w-full py-4" id="home">
+    <section className="py-4" id="home">
       <div className="group relative mx-auto h-[26rem] max-w-7xl px-4 md:h-[36rem]">
         {/* Slider for Large Screen */}
         {slides.map(

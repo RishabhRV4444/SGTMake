@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, ChangeEvent } from 'react';
+import { useState } from 'react';
 import { Upload, Plus, Minus } from 'lucide-react';
 
 export default function CNCOrderForm() {
@@ -14,7 +14,7 @@ export default function CNCOrderForm() {
   const tabs: string[] = ['CNC Machining', 'Laser Cutting', '3D Designing'];
   const materials: string[] = ['MS Steel', 'Aluminium', 'Copper', 'Plastic'];
 
-  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
     }
@@ -22,6 +22,11 @@ export default function CNCOrderForm() {
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+
+  const handleSubmit = () => {
+    const collectedData = { selectedTab, material, surfaceFinish, quantity, remarks, file };
+    console.log('Submitted Data:', collectedData);
+  };
 
   return (
     <>
@@ -32,9 +37,7 @@ export default function CNCOrderForm() {
             <button
               key={tab}
               className={`px-4 py-2 rounded-md text-sm font-medium ${
-                selectedTab === tab
-                  ? 'border border-orange-500 text-orange-500'
-                  : 'border border-gray-300 text-gray-700'
+                selectedTab === tab ? 'border border-orange-500 text-orange-500' : 'border border-gray-300 text-gray-700'
               }`}
               onClick={() => setSelectedTab(tab)}
             >
@@ -63,9 +66,7 @@ export default function CNCOrderForm() {
               <button
                 key={mat}
                 className={`px-3 py-1 rounded-md text-sm ${
-                  material === mat
-                    ? 'bg-orange-500 text-white'
-                    : 'border border-gray-300 text-gray-700'
+                  material === mat ? 'bg-orange-500 text-white' : 'border border-gray-300 text-gray-700'
                 }`}
                 onClick={() => setMaterial(mat)}
               >
@@ -79,26 +80,14 @@ export default function CNCOrderForm() {
         <div className="mb-4">
           <p className="font-medium mb-2">Surface Finish</p>
           <div className="flex gap-2">
-            <button
-              className={`px-4 py-2 rounded-md ${
-                surfaceFinish === 'Yes'
-                  ? 'bg-orange-500 text-white'
-                  : 'border border-gray-300 text-gray-700'
-              }`}
+            <button 
+              className={`px-4 py-2 rounded-md ${surfaceFinish === 'Yes' ? 'bg-orange-500 text-white' : 'border border-gray-300 text-gray-700'}`}
               onClick={() => setSurfaceFinish('Yes')}
-            >
-              Yes
-            </button>
-            <button
-              className={`px-4 py-2 rounded-md ${
-                surfaceFinish === 'No'
-                  ? 'bg-orange-500 text-white'
-                  : 'border border-gray-300 text-gray-700'
-              }`}
+            >Yes</button>
+            <button 
+              className={`px-4 py-2 rounded-md ${surfaceFinish === 'No' ? 'bg-orange-500 text-white' : 'border border-gray-300 text-gray-700'}`}
               onClick={() => setSurfaceFinish('No')}
-            >
-              No
-            </button>
+            >No</button>
           </div>
         </div>
 
@@ -106,23 +95,12 @@ export default function CNCOrderForm() {
         <div className="mb-4">
           <p className="font-medium mb-2">Quantity (pcs)</p>
           <div className="flex items-center gap-3">
-            <button
-              className="p-2 border border-gray-300 rounded-md"
-              onClick={decrementQuantity}
-            >
-              <Minus />
-            </button>
+            <button className="p-2 border border-gray-300 rounded-md" onClick={decrementQuantity}><Minus /></button>
             <span className="text-lg">{quantity}</span>
-            <button
-              className="p-2 border border-gray-300 rounded-md"
-              onClick={incrementQuantity}
-            >
-              <Plus />
-            </button>
+            <button className="p-2 border border-gray-300 rounded-md" onClick={incrementQuantity}><Plus /></button>
           </div>
         </div>
 
-        {/* Remarks */}
         <div className="mb-4">
           <p className="font-medium mb-2">Remarks</p>
           <textarea
@@ -130,12 +108,11 @@ export default function CNCOrderForm() {
             rows={3}
             placeholder="Write here"
             value={remarks}
-            onChange={(e) => setRemarks(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setRemarks(e.target.value)}
           ></textarea>
         </div>
 
-        {/* Submit Button */}
-        <button className="bg-orange-500 text-white w-full py-2 rounded-md text-sm font-medium">
+        <button className="bg-orange-500 text-white w-full py-2 rounded-md text-sm font-medium" onClick={handleSubmit}>
           Add to Cart
         </button>
       </div>

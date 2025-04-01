@@ -25,10 +25,10 @@ export async function generateMetadata({
 
   return {
     metadataBase: new URL(process.env.METADATA_BASE_URL!),
-    title: `${product.title} | GadgeXhub`,
+    title: `${product.title} | SGT Make`,
     description: `${product.description}`,
     openGraph: {
-      title: `${product.title} | GadgeXhub`,
+      title: `${product.title} | SGT Make`,
       description: `${product.description}`,
       images: product.colorVariants
         ? [

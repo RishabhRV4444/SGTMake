@@ -99,7 +99,7 @@ const BoltSelector: React.FC = () => {
         {[5, 6, 8, 10, 12, 15, 18, 20, 25, 30].map((len) => (
           <button
             key={len}
-            className={`p-2 border rounded-lg transition ${
+            className={`p-2 border rounded-lg transition w-14 ${
               selectedOptions.length === len ? 'bg-orange-500 text-white' : 'hover:bg-gray-200'
             }`}
             onClick={() => toggleSelection('length', len)}
