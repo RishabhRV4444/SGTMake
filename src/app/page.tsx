@@ -31,6 +31,7 @@ function makeRowViewAll(row: string) {
   else return `/store/c/${row}?popular`;
 }
 
+
 export default async function page() {
   const heroBanners = await getHeroBanner();
 
@@ -48,7 +49,7 @@ export default async function page() {
   );
 
   return (
-    <div className="w-screen space-y-14">
+    <div className=" space-y-14">
       {heroBanners && <Hero slides={heroBanners} />}
       <Banner />
     

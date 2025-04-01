@@ -18,7 +18,7 @@ const SidebarNav = ({ navItems }: { navItems: NavbarCategories[] | null }) => {
       </SheetTrigger>
       <SheetContent side={"left"}>
         <SheetHeader className="mb-5 text-left">
-          <SheetTitle>GadgeXhub</SheetTitle>
+          <SheetTitle>SGT Make</SheetTitle>
         </SheetHeader>
         <ul className="text-left">
           {navItems?.map((item, i) => <DropdownItem item={item} key={i} />)}

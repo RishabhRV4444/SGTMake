@@ -10,8 +10,8 @@ const Footer = () => {
     return (
         <footer className="bg-[#18191A] text-white p-8 mt-8 ">
             <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 max-w-6xl">
-                <div className=" flex items-center flex-col">
-                    <Image height={40} width={50} src="/footer-logo.png" alt="Logo" className="w-32 mb-4  " />
+                <div className=" flex items-center md:items-start flex-col">
+                    <Image height={150} width={500} src="/footer-logo.png" alt="Logo" className="w-32 mb-4  " />
           
                     <div className="flex space-x-3 mt-4 text-xl">
                         <Link href="https://www.facebook.com/share/1XKtj5HDHx/" ><FaFacebook size={30}/></Link>
