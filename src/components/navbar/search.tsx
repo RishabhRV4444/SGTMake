@@ -66,7 +66,7 @@ const Search = ({ bestSeller }: { bestSeller: CategoryProduct[] | null }) => {
   return (
     <form
       onSubmit={searchProduct}
-      className={`relative mx-auto space-y-1 cursor-pointer  transition-all duration-400 ${isFocused ? "w-96" : "w-12 "}`}
+      className={`relative mx-auto  cursor-pointer  transition-all duration-400 ${isFocused ? "md:w-96" : "md:w-12 "}`}
       tabIndex={0}
       onFocus={() => setShowDropdown(true)}
       onBlur={() => setShowDropdown(false)}
@@ -82,7 +82,7 @@ const Search = ({ bestSeller }: { bestSeller: CategoryProduct[] | null }) => {
         size="sm"
         isClearable={true}
         classNames={{
-          inputWrapper: `${isFocused ? "bg-gray-200" : "bg-transparent  "}  m-0 rounded-lg md:rounded-full `,
+          inputWrapper: `${isFocused ? "md:bg-gray-200" : "md:bg-transparent  "}  m-0 rounded-lg md:rounded-full `,
         }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}

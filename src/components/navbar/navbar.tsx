@@ -17,6 +17,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 // import { getMarqueeOffers } from "@/lib/api/get-marquee-offers";
 import Image from "next/image";
+import Navlist from "./navlist";
 
 export default async function Navbar() {
   const navItems = await getNavbarCategories();
@@ -53,11 +54,12 @@ export default async function Navbar() {
             justify="center"
           >
              <div className="hidden gap-4 lg:flex">
-              {navItems?.map((item, i) => (
+              {/* {navItems?.map((item, i) => (
                 <DropdownContainer child={item.child} key={i}>
                   {item.parent}
                 </DropdownContainer>
-              ))}
+              ))} */}
+              <Navlist/>
              
             </div>
             
@@ -66,7 +68,9 @@ export default async function Navbar() {
             className="flex items-center gap-4 md:!flex-grow-0 w-[70%]"
             justify="end"
           >
+            <div className="hidden gap-4 lg:block">
            <Search bestSeller={popular} />
+           </div>
             <div className="flex items-center gap-5">
               <Drawer />
               {session ? (
@@ -87,11 +91,11 @@ export default async function Navbar() {
 
             {/* For Small Screen */}
             <div className="flex items-center gap-3 lg:hidden">
-              <SidebarNav navItems={navItems} />
+              <SidebarNav  />
             </div>
           </NavbarContent>
         </div>
-        <div className="w-full px-3 md:hidden">
+        <div className="w-full  md:hidden">
           <Search bestSeller={popular} />
         </div>
       </NextNavbar>

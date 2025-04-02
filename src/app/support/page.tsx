@@ -23,18 +23,18 @@ export default function Support() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row w-full min-h-screen">
-        <aside className="md:w-1/4 border-r p-4 bg-gray-50">
+      <div className="flex flex-col md:flex-row w-full min-h-screen max-w-7xl mx-auto">
+        <aside className="md:w-1/4 border-r p-4 ">
           <h2 className="text-lg font-semibold mb-4">Support</h2>
           <nav>
             <ul className="space-y-2">
               {options.map((option) => (
                 <li
                   key={option.label}
-                  className={`p-2 cursor-pointer rounded-md ${
+                  className={`px-3 py-5 cursor-pointer rounded-full text-center ${
                     selectedOption.label === option.label
                       ? "bg-orange-200"
-                      : "hover:bg-gray-100"
+                      : "hover:bg-gray-50"
                   }`}
                   onClick={() => setSelectedOption(option)}
                 >

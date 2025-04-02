@@ -1,3 +1,4 @@
+"use client";
 import { NavbarCategories } from "@/lib/types/types";
 import {
   Sheet,
@@ -9,8 +10,71 @@ import {
 import { Menu } from "lucide-react";
 import DropdownItem from "./dropdown-item";
 import ClientLink from "@/components/shared/client-link";
+export type NavItem = {
+  label: string;
+  link?: string;
+  children?: NavItem[];
+};
 
-const SidebarNav = ({ navItems }: { navItems: NavbarCategories[] | null }) => {
+export const navItems: NavItem[] = [
+  {
+    label: "Products",
+    link: "#",
+    children: [
+      {
+        label: "Fasteners",
+        link: "/fastner",
+      },
+      {
+        label: "Tools & Equipment",
+        link: "/store/c/ev-parts",
+      },
+      {
+        label: "EV Parts",
+        link: "store/c/tools-&-equipments",
+      },
+      {
+        label: "Connectors & Wires",
+        link: "/connectors-wires",
+      }
+    ]
+  },
+  {
+    label: "Services",
+    link: "#",
+    children: [
+      {
+        label: "CNC Machining",
+        link: "/service/cncmaching"
+      },
+      {
+        label: "Laser Cutting",
+        link: "/service/cncmaching"
+      },
+      {
+        label: "3D Printing",
+        link: "/service/cncmaching"
+      },
+      {
+        label: "Wiring Harness",
+        link: "/service/wiring-harness"
+      },
+      {
+        label: "Battery Pack",
+        link: "/service/batterypack"
+      }
+    ]
+  },
+  {
+    label: "Contact Us",
+    link: "/contact"
+  },
+  {
+    label: "Support",
+    link: "/support"
+  }
+];
+const SidebarNav = () => {
   return (
     <Sheet>
       <SheetTrigger>
@@ -23,13 +87,7 @@ const SidebarNav = ({ navItems }: { navItems: NavbarCategories[] | null }) => {
         <ul className="text-left">
           {navItems?.map((item, i) => <DropdownItem item={item} key={i} />)}
           <div className="cursor-pointer rounded-lg px-4 py-2 hover:bg-gray-200">
-            <ClientLink
-              htmlFor="drawer-left"
-              redirect="/store"
-              className="cursor-pointer p-0 text-base font-medium"
-            >
-              Store
-            </ClientLink>
+        
           </div>
         </ul>
       </SheetContent>
