@@ -66,6 +66,10 @@ export const navItems: NavItem[] = [
     ]
   },
   {
+    label: "About Us",
+    link: "/about"
+  },
+  {
     label: "Contact Us",
     link: "/contact"
   },

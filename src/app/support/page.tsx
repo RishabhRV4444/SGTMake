@@ -12,7 +12,7 @@ interface Option {
 
 export default function Support() {
   const options: Option[] = [
-    { label: "FAQ", content: <FAQSection /> },
+    { label: "Frequently Asked Questions", content: <FAQSection /> },
     { label: "How to Order", content: <HowToOrder /> },
     { label: "How to Get a Quote", content: <GetQuote /> },
     { label: "Videos", content: <p>Video is Loading until enjoy free service</p> },
@@ -23,9 +23,11 @@ export default function Support() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row w-full min-h-screen max-w-7xl mx-auto">
+      <div className="flex flex-col  w-full min-h-screen max-w-7xl mx-auto">
+          <h2 className="text-2xl font-semibold my-4 ml-14">Support</h2>
+
+          <div className="flex flex-col md:flex-row ">
         <aside className="md:w-1/4 border-r p-4 ">
-          <h2 className="text-lg font-semibold mb-4">Support</h2>
           <nav>
             <ul className="space-y-2">
               {options.map((option) => (
@@ -48,9 +50,10 @@ export default function Support() {
           <h2 className="text-2xl font-bold mb-4">{selectedOption.label}</h2>
           <div className="prose max-w-full">
             {selectedOption.content}
-            {selectedOption.label === "FAQ" && <></>}
+            {selectedOption.label === "Frequently Asked Questions" && <></>}
           </div>
         </main>
+        </div>
       </div>
       <Footer />
     </>
