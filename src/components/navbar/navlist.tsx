@@ -102,12 +102,12 @@ export default function Navlist() {
               href={d.link ?? "#"}
               className="relative group  px-2 py-3 transition-all "
             >
-              <p className="flex cursor-pointer items-center gap-2 text-gray-700 group-hover:text-black ">
+              <span className="flex cursor-pointer items-center gap-2 text-gray-700 group-hover:text-black ">
                 <span>{d.label}</span>
                 {d.children && (
                   <IoIosArrowUp className=" rotate-180  transition-all group-hover:rotate-0" />
                 )}
-              </p>
+              </span>
 
               {/* dropdown */}
               {d.children && (

@@ -2,7 +2,11 @@ import Image from "next/image";
 import Footer from "../components/Footer";
 import CustomerReview from "../components/Review";
 import ReviewCarousel from "./review-carausel";
-
+interface ServeCardProps {
+    img: string;    
+    head: string;
+    desc: string;
+}
 export default function AboutPage() {
     return (
         <>
@@ -41,7 +45,7 @@ export default function AboutPage() {
     );
 }
 
-export const ServeCard = ({ img, head, desc }:any) => {
+export const ServeCard = ({ img, head, desc }:ServeCardProps) => {
     return (
         <div className="flex flex-col md:flex-row items-center bg-white rounded-2xl shadow p-6 m-5">
             <div className="md:w-1/2 w-full rounded-2xl overflow-hidden">
@@ -55,7 +59,7 @@ export const ServeCard = ({ img, head, desc }:any) => {
     );
 };
 
-export const ServeCard2 = ({ img, head, desc }:any) => {
+export const ServeCard2 = ({ img, head, desc }:ServeCardProps) => {
     return (
         <div className="flex flex-col-reverse md:flex-row items-center bg-white rounded-2xl shadow p-6 m-5">
             <div className="mt-7 md:mt-0 flex flex-col justify-center md:w-1/2 w-full">
