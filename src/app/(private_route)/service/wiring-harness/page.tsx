@@ -10,7 +10,7 @@ import Image from "next/image"
 
 // Define allowed file types and max size
 const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB
-const ALLOWED_FILE_TYPES = ["application/pdf", "application/vnd.ms-excel", "application/msword", "image/", "model/step"]
+const ALLOWED_FILE_TYPES = [ "image/"]
 
 // Define the form schema
 const formSchema = z.object({
@@ -275,7 +275,7 @@ export default function WiringHarnessForm() {
               id="file"
               className="hidden"
               onChange={handleFileUpload}
-              accept=".pdf,.xls,.xlsx,.doc,.docx,.jpg,.jpeg,.png,.gif,.webp,.stp"
+              accept="image/*"
               disabled={fileUploadStatus === "uploading" || formStatus === "submitting"}
             />
 
