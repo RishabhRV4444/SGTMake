@@ -45,15 +45,15 @@ export const navItems: NavItem[] = [
     children: [
       {
         label: "CNC Machining",
-        link: "/service/cncmaching"
+        link: "/service?service=cnc-machining"
       },
       {
         label: "Laser Cutting",
-        link: "/service/cncmaching"
+        link: "/service?service=laser-cutting"
       },
       {
         label: "3D Printing",
-        link: "/service/cncmaching"
+        link: "/service?service=designing"
       },
       {
         label: "Wiring Harness",
