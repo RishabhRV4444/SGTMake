@@ -382,7 +382,7 @@ export default function ManufacturingServices() {
         <div className="bg-green-50 my-6 max-w-6xl mx-auto p-6 rounded-xl border border-green-200 text-center">
           <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
           <h2 className="text-2xl font-medium text-green-800 mb-2">Order Submitted Successfully</h2>
-          <p className="text-green-700 mb-2">Thank you for your order. We'll get back to you soon with a quote.</p>
+          <p className="text-green-700 mb-2">Thank you for your order. We will get back to you soon with a quote.</p>
           {submittedServiceId && <p className="text-green-700 mb-4">Service ID: {submittedServiceId}</p>}
           <button
             onClick={() => {
