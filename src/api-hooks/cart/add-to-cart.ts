@@ -13,7 +13,7 @@ async function handleCart(values: {
   quantity: number;
   color: string | null;
 }) {
-  const { data } = await axios.post("/api/user/cart", values);
+  const { data } = await axios.post("/api/cart", values);
   return data as CartItemRes;
 }
 

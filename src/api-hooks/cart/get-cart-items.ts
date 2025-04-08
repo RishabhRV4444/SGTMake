@@ -3,7 +3,7 @@ import { CartItemsRes } from "@/lib/types/types";
 import { useQuery } from "@tanstack/react-query";
 
 const getCartItems = async () => {
-  const { data } = await axios.get("/api/user/cart");
+  const { data } = await axios.get("/api/cart");
   return data as CartItemsRes;
 };
 

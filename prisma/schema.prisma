@@ -71,15 +71,19 @@ model Cart {
   guestUser   GuestUser?  @relation(fields: [guestUserId], references: [id])
   User        User?       @relation(fields: [userId], references: [id])
  cartItems CartItem[] 
+ 
 }
 model CartItem {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  productId String  @db.ObjectId
-  quantity  Int
-  cartId    String  @db.ObjectId
-  color     String?
-  cart      Cart    @relation(fields: [cartId], references: [id],onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id])
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId     String?  @db.ObjectId // optional if using custom product
+  customProduct Json?    // JSON field to store customized product
+  quantity      Int
+  cartId        String   @db.ObjectId
+  color         String?
+  cart          Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product       Product? @relation(fields: [productId], references: [id])
+
+  @@index([cartId])
 }
 
 model Category {

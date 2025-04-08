@@ -3,7 +3,7 @@ import { CartItemQuantity, CartItemQuantityRes } from "@/lib/types/types";
 import { useMutation } from "@tanstack/react-query";
 
 async function handleQuantity(values: CartItemQuantity) {
-  const { data } = await axios.patch("/api/user/cart", values);
+  const { data } = await axios.patch("/api/cart", values);
   return data as CartItemQuantityRes;
 }
 
