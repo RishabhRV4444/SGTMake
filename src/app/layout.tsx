@@ -4,8 +4,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import ShowNavbar from "@/components/navbar/show-navbar";
 import { LayoutProps } from "@/lib/types/types";
-import ShowFooter from "@/components/footer/show-footer";
-import Footer from "@/components/footer/footer";
+
 import { Toaster } from "sonner";
 import AuthProvider from "@/provider/AuthProvider";
 import QueryProvider from "@/provider/QueryProvider";

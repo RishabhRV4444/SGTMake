@@ -5,17 +5,14 @@ import ProductRow from "@/components/products/product-row";
 import { getHeroBanner } from "@/lib/api/get-hero-banner";
 import { getFilteredProduct } from "@/lib/api/products/get-filtered-products";
 import { capitalizeSearchParam } from "@/lib/utils";
-import Image from "next/image";
 import Navbar from "./components/Navbar";
 import Services from "@/app/components/Services";
 import IndustryComponent from "@/app/components/IndustryComponent";
 import Footer from "@/app/components/Footer";
-import ToolTip from "./components/ToolTip";
 import Choose from "@/app/components/Choose";
 import Serve from "@/app/components/Serve";
 import CustomerReview from "@/app/components/Review";
 import GlobalDelivery from "@/app/components/GlobalDelivery";
-import ContactUs from "@/app/components/contactUs";
 
 
 
