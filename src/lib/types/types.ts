@@ -119,6 +119,8 @@ export type ItemSummaryProps = {
   quantity: number;
   basePrice: number;
   offerPrice: number;
+  customProductData: Record<string, any>;
+  isCustomProduct: boolean;
   title: string;
   image: string;
 };
@@ -214,7 +216,7 @@ export interface ItemSummary {
   offerPrice: number
   imageUrl: string
   isCustomProduct?: boolean
-  customProductData?: any
+  customProductData?: CustomProduct
 }
 export interface CustomProduct {
   title: string

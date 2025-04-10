@@ -13,7 +13,7 @@ const Order = async ({ params }: { params: { oid: string } }) => {
   const order = await getOrder(orderId)
   if (!order || !order.order?.orderItems || !order.order.address) return notFound()
 
-  const subtotal = order.order.orderItems.reduce((acc, curr) => acc + curr.basePrice, 0) || 0
+  const subtotal = order.order.orderItems.reduce((acc, curr) => acc + (curr.basePrice ?? 0), 0) || 0
   const total = order.order.orderItems.reduce((acc, curr) => acc + curr.offerPrice, 0) || 0
 
   return (
