@@ -1,67 +1,312 @@
-"use client";
+"use client"
 
-import Image from "next/image";
-import Footer from "../components/Footer";
-import { SocialCard } from "../components/SocialCard";
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { ArrowUpRight, Mail, Phone } from "lucide-react"
+import Image from "next/image"
+import emailjs from "@emailjs/browser"
+import Link from "next/link"
 
-export default function ContactUsPage() {
+// Define the validation schema with Zod
+const formSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
+  email: z.string().email({ message: "Please enter a valid email address" }),
+  company: z.string().optional(),
+  country: z.string().min(2, { message: "Please enter a valid country" }),
+  inquiryDetails: z.string().min(10, { message: "Inquiry details must be at least 10 characters" }),
+})
+
+// Infer the type from the schema
+type FormValues = z.infer<typeof formSchema>
+
+export default function ContactForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Initialize React Hook Form with Zod resolver
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      company: "",
+      country: "",
+      inquiryDetails: "",
+    },
+  })
+
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true)
+
+    try {
+      // Replace these with your actual EmailJS service ID, template ID, and public key
+      const serviceId = "YOUR_SERVICE_ID"
+      const templateId = "YOUR_TEMPLATE_ID"
+      const publicKey = "YOUR_PUBLIC_KEY"
+
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          from_name: data.name,
+          from_email: data.email,
+          company: data.company,
+          country: data.country,
+          message: data.inquiryDetails,
+        },
+        publicKey,
+      )
+
+      alert("Message sent successfully!")
+      reset() // Reset form after successful submission
+    } catch (error) {
+      console.error("Error sending email:", error)
+      alert("Failed to send message. Please try again later.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
-    <>
-      <div className="container mx-auto p-4 lg:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Section - Contact Form */}
-          <div>
-            <h1 className="text-4xl font-semibold">Contact with Our <br/> Specialized Team</h1>
-            <p className="text-gray-600 mb-6">
-              Please fill in the part number according to your cable requirements.
-            </p>
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input type="text" placeholder="Name" className="p-3 border rounded-md w-full" />
-              <input type="email" placeholder="Email" className="p-3 border rounded-md w-full" />
-              <input type="text" placeholder="Company" className="p-3 border rounded-md w-full" />
-              <input type="text" placeholder="Country" className="p-3 border rounded-md w-full" />
-              <textarea placeholder="Inquiry Details" className="p-3 border rounded-md w-full col-span-2" ></textarea>
-              <button className="bg-orange-500 text-white rounded-md p-3">Send Message</button>
-            </form>
-          </div>
-          
-          {/* Right Section - Images & Contact Info */}
-          <div className="space-y-6">
-            {/* Image Section */}
-            <div className="grid grid-cols-2 gap-4">
-              <div className="relative">
-                <Image height={500} width={300} src="/london.png" alt="London, UK" className="rounded-lg w-full h-52 object-cover" />
-                <div className="absolute bottom-2 left-2 bg-white px-3 py-1 text-sm font-semibold shadow-md rounded-md">London, UK ↗</div>
+    <div className="container mx-auto px-4 py-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Left Column - Form */}
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Contact with Our Specialized Team</h1>
+          <p className="text-gray-600 mb-8">Please fill in the part number according to your cable requirements.</p>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="name" className="block font-medium mb-2">
+                  Name
+                </label>
+                <input
+                  id="name"
+                  {...register("name")}
+                  className={`w-full px-4 py-3 rounded-md border ${
+                    errors.name ? "border-red-500" : "border-gray-300"
+                  } focus:outline-none focus:ring-2 focus:ring-gray-200`}
+                  placeholder="Write here"
+                />
+                {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>}
               </div>
-              <div className="grid grid-cols-1 gap-4">
-                <div className="relative">
-                <Image height={500} width={300} src="/usa.png" alt="California, USA" className="rounded-lg w-full h-24 object-cover" />
-                  <div className="absolute bottom-2 left-2 bg-white px-3 py-1 text-sm font-semibold shadow-md rounded-md">California, USA ↗</div>
-                </div>
-                <div className="relative">
-                    <Image height={500} width={300} src="/china.png"alt="Shanghai, China" className="rounded-lg w-full h-24 object-cover" />
-                  <div className="absolute bottom-2 left-2 bg-white px-3 py-1 text-sm font-semibold shadow-md rounded-md">Shanghai, China ↗</div>
-                </div>
+              <div>
+                <label htmlFor="email" className="block font-medium mb-2">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  {...register("email")}
+                  className={`w-full px-4 py-3 rounded-md border ${
+                    errors.email ? "border-red-500" : "border-gray-300"
+                  } focus:outline-none focus:ring-2 focus:ring-gray-200`}
+                  placeholder="Write here"
+                />
+                {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>}
               </div>
             </div>
-            
-            {/* Contact Info */}
-            <div className="border p-6 rounded-lg shadow-md bg-gray-100">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <SocialCard img={"/mail.png"} title={"Email"} text={"example@gmail.com"}/>
-                <SocialCard img={"/linkdin.png"} title={"LinkedIn"} text={"@sgtmake25"}/>
-                <SocialCard img={"/x.png"} title={"X"} text={"@sgtmake25"}/>
-                <SocialCard img={"/call.png"} title={"Phone"} text={"+944 675 9786"}/>
-                <SocialCard img={"/insta.png"} title={"Instagram"} text={"@sgtmake25"}/>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label htmlFor="company" className="block font-medium mb-2">
+                  Company
+                </label>
+                <input
+                  id="company"
+                  {...register("company")}
+                  className="w-full px-4 py-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                  placeholder="Write here"
+                />
+              </div>
+              <div>
+                <label htmlFor="country" className="block font-medium mb-2">
+                  Country
+                </label>
+                <input
+                  id="country"
+                  {...register("country")}
+                  className={`w-full px-4 py-3 rounded-md border ${
+                    errors.country ? "border-red-500" : "border-gray-300"
+                  } focus:outline-none focus:ring-2 focus:ring-gray-200`}
+                  placeholder="Write here"
+                />
+                {errors.country && <p className="mt-1 text-sm text-red-500">{errors.country.message}</p>}
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="inquiryDetails" className="block font-medium mb-2">
+                Inquiry Details
+              </label>
+              <textarea
+                id="inquiryDetails"
+                {...register("inquiryDetails")}
+                rows={6}
+                className={`w-full px-4 py-3 rounded-md border ${
+                  errors.inquiryDetails ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-gray-200`}
+                placeholder="Write here"
+              />
+              {errors.inquiryDetails && <p className="mt-1 text-sm text-red-500">{errors.inquiryDetails.message}</p>}
+            </div>
+
+            <div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-full transition-colors disabled:opacity-70"
+              >
+                {isSubmitting ? "Sending..." : "Send Message"}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Right Column - Locations and Contact Info */}
+        <div className="space-y-6">
+          {/* London Location */}
+          <div className="relative rounded-2xl overflow-hidden h-48">
+            <Image src="/london.png" alt="London" fill className="object-cover" />
+            <div className="absolute bottom-4 left-4 bg-white py-2 px-4 rounded-full flex items-center gap-2">
+              <span className="font-medium">London, UK</span>
+              <ArrowUpRight size={16} />
+            </div>
+          </div>
+
+          {/* Two Locations Side by Side */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* California Location */}
+            <div className="relative rounded-2xl overflow-hidden h-40">
+              <Image src="/usa.png" alt="California" fill className="object-cover" />
+              <div className="absolute bottom-4 left-4 bg-white py-2 px-4 rounded-full flex items-center gap-2">
+                <span className="font-medium">California, USA</span>
+                <ArrowUpRight size={16} />
+              </div>
+            </div>
+
+            {/* Shanghai Location */}
+            <div className="relative rounded-2xl overflow-hidden h-40">
+              <Image src="/china.png" alt="Shanghai" fill className="object-cover" />
+              <div className="absolute bottom-4 left-4 bg-white py-2 px-4 rounded-full flex items-center gap-2">
+                <span className="font-medium">Shang Hai, China</span>
+                <ArrowUpRight size={16} />
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="bg-gray-50 rounded-2xl p-6">
+            <div className="grid grid-cols-2 gap-6">
+              {/* Email */}
+              <Link href="mailto:business@sgtmake.com" className="flex items-center gap-3">
+                <div className="bg-orange-100 p-3 rounded-full">
+                  <Mail className="h-5 w-5 text-orange-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Email</p>
+                  <p className="text-sm text-gray-600">business@sgtmake.com</p>
+                </div>
+              </Link>
+
+              {/* Phone */}
+              <Link href="tel:9462223735"  className="flex items-center gap-3">
+                <div className="bg-orange-100 p-3 rounded-full">
+                  <Phone className="h-5 w-5 text-orange-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Phone</p>
+                  <p className="text-sm text-gray-600">+91 94622 23735</p>
+                </div>
+              </Link>
+
+              {/* LinkedIn */}
+              <Link href="https://www.linkedin.com/company/sgtmake/" className="flex items-center gap-3">
+                <div className="bg-orange-100 p-3 rounded-full">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-orange-500"
+                  >
+                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                    <rect x="2" y="9" width="4" height="12"></rect>
+                    <circle cx="4" cy="4" r="2"></circle>
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-medium">LinkedIn</p>
+                  <p className="text-sm text-gray-600">SGT MAKE | Solus Global Trade LLP</p>
+                </div>
+              </Link>
+
+              {/* Instagram */}
+              <Link href="https://www.instagram.com/sgt.make?igsh=MTNhZXJnZm5iMDZzdA==" className="flex items-center gap-3">
+                <div className="bg-orange-100 p-3 rounded-full">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-orange-500"
+                  >
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-medium">Instagram</p>
+                  <p className="text-sm text-gray-600">@sgt.make</p>
+                </div>
+              </Link>
+
+              {/* X (Twitter) */}
+              <div className="flex items-center gap-3 col-span-2">
+                <div className="bg-orange-100 p-3 rounded-full">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-orange-500"
+                  >
+                    <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
+                    <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-medium">X</p>
+                  <p className="text-sm text-gray-600">@sgtmake25</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <Footer/>
-    </>
-  );
+    </div>
+  )
 }
-
-
-

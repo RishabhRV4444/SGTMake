@@ -27,12 +27,15 @@ export default function AboutPage() {
                     <ServeCard
                         img="/car.png"
                         head="Our Story: Building the Future"
-                        desc="SGTMake is a leading provider of industrial components, tools, equipment, and comprehensive manufacturing services. We specialize in delivering precision-engineered solutions to a diverse range of industries, from automotive and electric vehicles to medical and beyond. Founded in [Year], SGTMake began with a vision to bridge the gap between innovative ideas and reliable manufacturing. Over the years, we've grown from a small workshop to a state-of-the-art facility, driven by our commitment to quality and customer satisfaction."
+                        desc1="SGTMake is a dynamic and experienced company dedicated to transforming innovative ideas into tangible realities. With over 8 years of expertise, we serve a diverse range of clients, from individual inventors and small businesses to large corporations and original equipment manufacturers (OEMs).. 
+
+"                        desc2="Our focus is on fostering collaborative partnerships and providing the technical expertise needed to bring complex projects to fruition. We pride ourselves on a culture of precision, quality, and responsiveness, ensuring that every undertaking receives the dedicated attention it deserves."
                     />
                     <ServeCard2
                         img="/car.png"
-                        head="What’s Our Mission"
-                        desc="Our mission is to empower our clients to achieve their goals by providing exceptional manufacturing solutions, fostering innovation, and building lasting partnerships. We are dedicated to delivering uncompromising quality, competitive pricing, and reliable service. We strive to be more than just a supplier; we aim to be a collaborative partner, understanding our clients' unique challenges and working alongside them to develop tailored solutions that drive their success."
+                        head="What’s Our Strength"
+                        desc1="Our strength lies in our ability to translate abstract concepts into precise designs and functional prototypes, paving the way for efficient and cost-effective manufacturing. We believe in open communication and close collaboration with our clients, ensuring that their vision remains at the core of every project. Our team is comprised of skilled professionals passionate about problem-solving and delivering exceptional results."
+                        desc2="We believe in building long-term relationships based on trust, transparency, and a shared commitment to excellence. We strive to empower our clients by providing the expertise and resources they need to succeed in today's competitive market."
                     />
                 </div>
                 <ReviewCarousel/>

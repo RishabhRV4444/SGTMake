@@ -11,7 +11,7 @@ import { AiOutlineClose } from "react-icons/ai";
 
 export type NavItem = {
   label: string;
-  link?: string;
+  link?: string | object;
   children?: NavItem[];
   iconImage?: string;
 };
@@ -45,15 +45,15 @@ export const navItems: NavItem[] = [
     children: [
       {
         label: "CNC Machining",
-        link: "/service?service=cnc-machining"
+        link: {pathname:"/service",query:{"service":"cnc-machining"}}
       },
       {
         label: "Laser Cutting",
-        link: "/service?service=laser-cutting"
+        link: {pathname:"/service",query:{"service":"laser-cutting"}}
       },
       {
         label: "3D Printing",
-        link: "/service?service=designing"
+        link: {pathname:"/service",query:{"service":"designing"}}
       },
       {
         label: "Wiring Harness",

@@ -6,10 +6,10 @@ import Image from "next/image";
 
 export default function IndustryComponent() {
     const data = [
-        { tag: "Fasteners", img: "/fastner.png",link:"/fastner" },
-        { tag: "Tools", img: "/tools.png",link:"/tools" },
+        { tag: "Fasteners", img: "/fastner.png",link:"/fasteners" },
+        { tag: "Tools", img: "/tools.png",link:"store/c/tools-&-equipments" },
         { tag: "Connection & Wires", img: "/wiring.png",link:"/connectors-wires"  },
-        { tag: "EV Parts", img: "/evpart.png",link:"/store"  },
+        { tag: "EV Parts", img: "/evpart.png",link:"/store/c/ev-parts"  },
     ];
 
     const [index, setIndex] = useState(0);
