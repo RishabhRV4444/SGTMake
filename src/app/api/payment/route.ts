@@ -37,7 +37,6 @@ export async function POST(req: NextRequest) {
         amount = (decodedItem.offerPrice || 0) * (decodedItem.quantity !== 0 ? decodedItem.quantity : 1)
 
         const orderItem = {
-          productId: null, // No product ID for custom products
           quantity: decodedItem.quantity,
           color: null,
           basePrice: (decodedItem.basePrice || 0) * (decodedItem.quantity !== 0 ? decodedItem.quantity : 1),
@@ -50,7 +49,7 @@ export async function POST(req: NextRequest) {
         }
 
         orderItems.push(orderItem)
-      } else {
+      } else if (decodedItem.productId) {
         // Handle regular products
         const dbProduct = await getProductWithImages(decodedItem.productId)
 
@@ -69,6 +68,8 @@ export async function POST(req: NextRequest) {
         }
 
         orderItems.push(orderItem)
+      } else {
+        return error400("Invalid checkout data: missing productId or customProduct", { products: null })
       }
     } else {
       const cartItems = await getCartItems(userId)
@@ -80,20 +81,19 @@ export async function POST(req: NextRequest) {
       // Calculate total amount and create order items
       for (const cartItem of cartItems.cartItems) {
         // Handle custom products (fasteners)
-        if (cartItem.customProduct) {
+        if (cartItem.customProduct ) {
           const itemPrice = cartItem.customProduct.offerPrice || 0
           const itemTotal = itemPrice * cartItem.quantity
           amount += itemTotal
 
           orderItems.push({
-            productId: null, // No product ID for custom products
             quantity: cartItem.quantity,
             color: null,
             basePrice: cartItem.customProduct.basePrice * cartItem.quantity,
             offerPrice: itemPrice * cartItem.quantity,
             customProduct: cartItem.customProduct,
           })
-        } else {
+        } else if (cartItem.productId && cartItem.product) {
           // Handle regular products
           const itemPrice = cartItem.product.offerPrice
           const itemTotal = itemPrice * cartItem.quantity
@@ -106,6 +106,9 @@ export async function POST(req: NextRequest) {
             basePrice: cartItem.product.basePrice * cartItem.quantity,
             offerPrice: itemPrice * cartItem.quantity,
           })
+        } else {
+          // This should never happen due to validation, but just in case
+          return error400("Invalid cart item: missing productId or customProduct", { products: null })
         }
       }
     }

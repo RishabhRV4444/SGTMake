@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
       const decodedItem: CheckoutItemProps = JSON.parse(atob(checkoutCookie))
 
       // Handle custom products (fasteners)
-      if (decodedItem.isCustomProduct) {
+      if (decodedItem.isCustomProduct ) {
         return success200({
           products: [
             {
@@ -29,27 +29,29 @@ export async function GET(req: NextRequest) {
             },
           ],
         })
+      } else if (decodedItem.productId) {
+        // Handle regular products
+        const dbProduct = await getProductWithImages(decodedItem.productId)
+
+        if (!dbProduct) {
+          return error400("The request is missing or contains an invalid product ID & Product Slug", { products: null })
+        }
+
+        return success200({
+          products: [
+            {
+              id: decodedItem.productId,
+              quantity: decodedItem.quantity,
+              basePrice: dbProduct.basePrice * (decodedItem.quantity !== 0 ? decodedItem.quantity : 1),
+              offerPrice: dbProduct.offerPrice * (decodedItem.quantity !== 0 ? decodedItem.quantity : 1),
+              title: dbProduct.title,
+              image: getImageThumbnail({ images: dbProduct.images }, decodedItem.color||""),
+            },
+          ],
+        })
+      } else {
+        return error400("Invalid checkout data: missing productId or customProduct", { products: null })
       }
-
-      // Handle regular products
-      const dbProduct = await getProductWithImages(decodedItem.productId)
-
-      if (!dbProduct) {
-        return error400("The request is missing or contains an invalid product ID & Product Slug", { products: null })
-      }
-
-      return success200({
-        products: [
-          {
-            id: decodedItem.productId,
-            quantity: decodedItem.quantity,
-            basePrice: dbProduct.basePrice * (decodedItem.quantity !== 0 ? decodedItem.quantity : 1),
-            offerPrice: dbProduct.offerPrice * (decodedItem.quantity !== 0 ? decodedItem.quantity : 1),
-            title: dbProduct.title,
-            image: getImageThumbnail({ images: dbProduct.images }, decodedItem.color),
-          },
-        ],
-      })
     } else {
       const session = await getServerSession(authOptions)
       if (!session || !session.user || !session.user.id) {
@@ -63,7 +65,7 @@ export async function GET(req: NextRequest) {
 
       const checkoutItems = cartItems.cartItems.map((cartItem) => {
         // Handle custom products (fasteners)
-        if (cartItem.customProduct) {
+        if (cartItem.customProduct && typeof cartItem.customProduct === "object" && "image" in cartItem.customProduct) {
           return {
             id: `custom-${cartItem.id}`,
             quantity: cartItem.quantity,
@@ -74,16 +76,19 @@ export async function GET(req: NextRequest) {
             isCustomProduct: true,
             customProductData: cartItem.customProduct,
           }
-        }
-
-        // Handle regular products
-        return {
-          id: cartItem.productId,
-          quantity: cartItem.quantity,
-          basePrice: cartItem.product.basePrice * (cartItem.quantity !== 0 ? cartItem.quantity : 1),
-          offerPrice: cartItem.product.offerPrice * (cartItem.quantity !== 0 ? cartItem.quantity : 1),
-          title: cartItem.product.title,
-          image: getImageThumbnail({ images: cartItem.product.images }, cartItem.color),
+        } else if (cartItem.productId && cartItem.product) {
+          // Handle regular products
+          return {
+            id: cartItem.productId,
+            quantity: cartItem.quantity,
+            basePrice: cartItem.product.basePrice * (cartItem.quantity !== 0 ? cartItem.quantity : 1),
+            offerPrice: cartItem.product.offerPrice * (cartItem.quantity !== 0 ? cartItem.quantity : 1),
+            title: cartItem.product.title,
+            image: getImageThumbnail({ images: cartItem.product.images }, cartItem.color),
+          }
+        } else {
+          // This should never happen due to validation, but just in case
+          throw new Error("Invalid cart item: missing productId or customProduct")
         }
       })
 

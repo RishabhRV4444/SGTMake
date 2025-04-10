@@ -61,7 +61,7 @@ async function createOrder(orderId: string, amount: number, userId: string, addr
           customProduct: item.customProduct,
         },
       })
-    } else {
+    } else if (item.productId) {
       // For regular products, include productId
       await db.orderItem.create({
         data: {
@@ -73,6 +73,9 @@ async function createOrder(orderId: string, amount: number, userId: string, addr
           offerPrice: item.offerPrice,
         },
       })
+    } else {
+      // This should never happen due to validation, but just in case
+      throw new Error("Order item must have either productId or customProduct")
     }
   }
 
@@ -100,4 +103,25 @@ async function createPayment(values: any) {
   })
 }
 
-export { getCartItems, getProductWithImages, createOrder, updateOrder, createPayment }
+async function getOrderWithItems(orderId: string) {
+  return await db.order.findUnique({
+    where: {
+      orderID: orderId,
+    },
+    include: {
+      address: true,
+      orderItems: {
+        include: {
+          product: {
+            include: {
+              images: true,
+            },
+          },
+        },
+      },
+      payment: true,
+    },
+  })
+}
+
+export { getCartItems, getProductWithImages, createOrder, updateOrder, createPayment, getOrderWithItems }

@@ -263,8 +263,8 @@ export interface CheckoutItemProps {
   productId: string
   quantity: number
   color?: string | null
-  basePrice?: number
-  offerPrice?: number
+  basePrice: number
+  offerPrice: number
   title?: string
   image?: string
   isCustomProduct?: boolean

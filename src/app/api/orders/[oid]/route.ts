@@ -87,7 +87,7 @@ export async function GET(req: NextRequest, { params }: { params: { oid: string 
     // Process order items to handle both regular and custom products
     const orderItems = order.orderItems.map((orderItem) => {
       // Handle custom products
-      if (orderItem.customProduct) {
+      if (orderItem.customProduct  ) {
         return {
           title: orderItem.customProduct.title || "Custom Product",
           slug: "fasteners", // Use a default slug for custom products

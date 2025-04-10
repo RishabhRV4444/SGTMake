@@ -76,7 +76,7 @@ model Cart {
 model CartItem {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   productId     String?  @db.ObjectId // optional if using custom product
-  customProduct Json?    // JSON field to store customized product
+  customProduct CustomProductJson?    // JSON field to store customized product
   quantity      Int
   cartId        String   @db.ObjectId
   color         String?
@@ -85,6 +85,14 @@ model CartItem {
 
   @@index([cartId])
 }
+type CustomProductJson {
+  title      String
+  basePrice  Float
+  offerPrice Float
+  image      String
+  options    Json // options can be dynamic key-value pairs
+}
+
 
 model Category {
   id       String      @id @default(auto()) @map("_id") @db.ObjectId
@@ -146,7 +154,7 @@ model OrderItem {
   orderId       String   @db.ObjectId
   basePrice     Float
   offerPrice    Float
-  customProduct Json?    // JSON field to store custom product data
+  customProduct CustomProductJson?    // JSON field to store custom product data
   order         Order    @relation(fields: [orderId], references: [id])
   product       Product? @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction) // Made optional
 

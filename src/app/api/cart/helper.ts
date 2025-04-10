@@ -8,9 +8,9 @@ type CreateCartProps = {
 type CreateCartItemProps = {
   quantity: number
   color: string | null
-  productId?: string // Make productId optional
+  productId?: string // Optional productId
   cartId: string
-  customProduct?: any // Add this field for fasteners
+  customProduct?: any // Optional customProduct
 }
 
 async function createGuestUser(expirationDate: Date) {
@@ -97,11 +97,16 @@ async function createCartWithCartItems({ userId, cartItems }: any) {
 }
 
 async function createCartItem({ quantity, color, productId, cartId, customProduct }: CreateCartItemProps) {
-  // Ensure customProduct has all required fields for fasteners
+  // Validate that at least one of productId or customProduct is provided
+  if (!productId && !customProduct) {
+    throw new Error("Either productId or customProduct must be provided");
+  }
+
+  // Ensure customProduct has all required fields for custom products
   if (customProduct) {
     // Make sure customProduct has all required fields
     if (!customProduct.title) {
-      customProduct.title = `Custom ${customProduct.options?.fastenerType || "Fastener"}`
+      customProduct.title = `Custom ${customProduct.options?.fastenerType || "Product"}`
     }
 
     if (!customProduct.basePrice && customProduct.options?.totalPrice) {
@@ -127,7 +132,7 @@ async function createCartItem({ quantity, color, productId, cartId, customProduc
     })
   }
 
-  // For regular products, include productId
+  // For regular products, include productId (we know it exists because of the validation above)
   return await db.cartItem.create({
     data: {
       quantity,
