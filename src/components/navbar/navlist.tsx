@@ -9,7 +9,7 @@ import { IoIosArrowUp } from "react-icons/io";
 import { AiOutlineClose } from "react-icons/ai";
 // import { useAutoAnimate } from "@formkit/auto-animate/react";
 
-type NavItem = {
+export type NavItem = {
   label: string;
   link?: string;
   children?: NavItem[];

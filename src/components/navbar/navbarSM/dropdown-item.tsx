@@ -1,8 +1,8 @@
 import ClientLink from "@/components/shared/client-link";
 import { ChevronDown } from "lucide-react";
-import { NavItem } from "./sidebar-nav";
-import { useRouter } from "next/navigation";
 
+import { useRouter } from "next/navigation";
+import { NavItem } from "../navlist";
 const DropdownItem = ({ item }: { item: NavItem }) => {
   const router = useRouter();
   return (
