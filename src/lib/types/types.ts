@@ -241,7 +241,7 @@ export interface CartItem {
 
 export interface CartItemsRes {
   success: boolean
-  item: CartItem[]
+  item: CartItemProps[]
 }
 
 export interface CartItemRes {

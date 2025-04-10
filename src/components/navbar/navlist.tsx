@@ -23,15 +23,15 @@ export const navItems: NavItem[] = [
     children: [
       {
         label: "Fasteners",
-        link: "/fastner",
+        link: "/fasteners",
       },
       {
         label: "Tools & Equipment",
-        link: "/store/c/ev-parts",
+        link: "store/c/tools-&-equipments",
       },
       {
         label: "EV Parts",
-        link: "store/c/tools-&-equipments",
+        link: "/store/c/ev-parts",
       },
       {
         label: "Connectors & Wires",

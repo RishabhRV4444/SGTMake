@@ -43,7 +43,7 @@ const Drawer = () => {
     }
 
     if (cartItemsSVR?.item) {
-      setCartItems(cartItemsSVR.item);
+      setCartItems(cartItemsSVR?.item);
     }
   }, [session, setCartItems, cartItemsSVR?.item]);
 

@@ -3,7 +3,7 @@ import type { FastenerConfig } from "@/components/fasteners/fastener-selector"
 // Bolt configuration
 export const boltConfig: FastenerConfig = {
   type: "Bolt",
-  image: "/images/fasteners/bolt.webp", // Replace with your actual image path
+  image: "/images/fasteners/bolt.jpg", // Replace with your actual image path
   basePrice: 0.5, // Base price for the simplest bolt
   options: {
     headType: {
