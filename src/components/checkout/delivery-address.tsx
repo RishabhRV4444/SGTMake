@@ -1,37 +1,33 @@
-"use client";
+"use client"
 
-import LinkButton from "../shared/link-button";
-import AddressDialog from "../dialog/address-dialog";
-import ChangeAddressDialog from "../dialog/change-address-dialog";
-import { useGetAddress } from "@/api-hooks/address/get-address";
-import SkeletonDeliveryAddress from "../skeletons/skeleton-delivery-address";
-import { useEffect } from "react";
-import { Pencil } from "lucide-react";
-import { useGlobalContext } from "@/context/store";
+import LinkButton from "../shared/link-button"
+import AddressDialog from "../dialog/address-dialog"
+import ChangeAddressDialog from "../dialog/change-address-dialog"
+import { useGetAddress } from "@/api-hooks/address/get-address"
+import SkeletonDeliveryAddress from "../skeletons/skeleton-delivery-address"
+import { useEffect } from "react"
+import { Pencil } from "lucide-react"
+import { useGlobalContext } from "@/context/store"
 
 const DeliveryAddress = () => {
-  const { deliveryAddress, setDeliveryAddress } = useGlobalContext();
-  const { data, isLoading, isFetching } = useGetAddress();
+  const { deliveryAddress, setDeliveryAddress } = useGlobalContext()
+  const { data, isLoading, isFetching } = useGetAddress()
 
-  const defaultAddress = data?.addresses?.find((address) => address.is_default);
+  const defaultAddress = data?.addresses?.find((address) => address.is_default)
 
   useEffect(() => {
-    setDeliveryAddress(defaultAddress);
-  }, [defaultAddress, setDeliveryAddress]);
+    setDeliveryAddress(defaultAddress)
+  }, [defaultAddress, setDeliveryAddress])
 
   return (
     <div className="mb-3 h-fit bg-white shadow">
       <div className="flex items-center justify-between border-b px-4 py-3">
         <h2 className="text-muted-foreground">Delivery address</h2>
-        {(deliveryAddress || !isLoading) && (
-          <ChangeAddressDialog addresses={data?.addresses} />
-        )}
+        {(deliveryAddress || !isLoading) && <ChangeAddressDialog addresses={data?.addresses} />}
       </div>
       {deliveryAddress ? (
         <div className="relative space-y-2 p-4 text-sm">
-          <h2 className="flex-shrink-0 font-semibold">
-            {deliveryAddress.name}
-          </h2>
+          <h2 className="flex-shrink-0 font-semibold">{deliveryAddress.name}</h2>
           <div className="flex flex-wrap items-center gap-1">
             <p className="flex-shrink-0">{deliveryAddress.address},</p>
             <p className="flex-shrink-0">{deliveryAddress.locality},</p>
@@ -52,14 +48,12 @@ const DeliveryAddress = () => {
         <SkeletonDeliveryAddress />
       ) : (
         <div className="flex w-full flex-col items-center justify-center gap-3 p-5">
-          <h1 className="text-sm text-muted-foreground">
-            No delivery addresses found, please add a new one
-          </h1>
+          <h1 className="text-sm text-muted-foreground">No delivery addresses found, please add a new one</h1>
           <LinkButton href="/account/address">Add new</LinkButton>
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default DeliveryAddress;
+export default DeliveryAddress

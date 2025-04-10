@@ -3,7 +3,7 @@ import type { FastenerConfig } from "@/components/fasteners/fastener-selector"
 // Bolt configuration
 export const boltConfig: FastenerConfig = {
   type: "Bolt",
-  image: "/images/fasteners/bolt.jpg", // Replace with your actual image path
+  image: "/images/fasteners/bolt.webp", // Replace with your actual image path
   basePrice: 0.5, // Base price for the simplest bolt
   options: {
     headType: {
@@ -168,7 +168,7 @@ export const washerConfig: FastenerConfig = {
 // Brass insert configuration
 export const brassInsertConfig: FastenerConfig = {
   type: "Brass Insert",
-  image: "/images/fasteners/brass-insert.jpg", // Replace with your actual image path
+  image: "/images/fasteners/brass-insert.png", // Replace with your actual image path
   basePrice: 0.4, // Base price for the simplest brass insert
   options: {
     size: {
@@ -187,7 +187,7 @@ export const brassInsertConfig: FastenerConfig = {
 // Rev Nuts configuration
 export const revNutsConfig: FastenerConfig = {
   type: "Rev Nuts",
-  image: "/images/fasteners/rev-nuts.jpg", // Replace with your actual image path
+  image: "/images/fasteners/rev-nuts.jpeg", // Replace with your actual image path
   basePrice: 0.35, // Base price for the simplest rev nut
   options: {
     size: {
@@ -207,7 +207,7 @@ export const revNutsConfig: FastenerConfig = {
 // Sand Offs configuration
 export const sandOffsConfig: FastenerConfig = {
   type: "Sand Offs",
-  image: "/images/fasteners/sand-offs.jpg", // Replace with your actual image path
+  image: "/images/fasteners/sand-offs.webp", // Replace with your actual image path
   basePrice: 0.45, // Base price for the simplest sand off
   options: {
     size: {

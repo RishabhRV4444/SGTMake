@@ -1,4 +1,4 @@
-import { db } from "@/lib/prisma";
+import { db } from "@/lib/prisma"
 
 async function getProductWithImages(productId: string) {
   return await db.product.findUnique({
@@ -8,7 +8,7 @@ async function getProductWithImages(productId: string) {
     include: {
       images: true,
     },
-  });
+  })
 }
 
 async function getCartItems(userId: string) {
@@ -28,32 +28,55 @@ async function getCartItems(userId: string) {
           quantity: true,
           color: true,
           productId: true,
+          customProduct: true, // Include customProduct field
+          id: true, // Include the ID for reference
         },
       },
     },
-  });
+  })
 }
 
-async function createOrder(
-  orderId: string,
-  amount: number,
-  userId: string,
-  addressId: string,
-  orderItems: any,
-) {
-  return await db.order.create({
+async function createOrder(orderId: string, amount: number, userId: string, addressId: string, orderItems: any[]) {
+  // Create the order first
+  const order = await db.order.create({
     data: {
       orderID: orderId,
       total: amount,
       userId,
       addressId,
-      orderItems: {
-        createMany: {
-          data: orderItems,
-        },
-      },
     },
-  });
+  })
+
+  // Then create each order item individually to handle custom products
+  for (const item of orderItems) {
+    if (item.customProduct) {
+      // For custom products, don't include productId
+      await db.orderItem.create({
+        data: {
+          orderId: order.id,
+          quantity: item.quantity,
+          color: item.color,
+          basePrice: item.basePrice,
+          offerPrice: item.offerPrice,
+          customProduct: item.customProduct,
+        },
+      })
+    } else {
+      // For regular products, include productId
+      await db.orderItem.create({
+        data: {
+          orderId: order.id,
+          productId: item.productId,
+          quantity: item.quantity,
+          color: item.color,
+          basePrice: item.basePrice,
+          offerPrice: item.offerPrice,
+        },
+      })
+    }
+  }
+
+  return order
 }
 
 async function updateOrder(order_id: string) {
@@ -66,21 +89,15 @@ async function updateOrder(order_id: string) {
       orderID: order_id,
     },
     include: {
-      orderItems: true
-    }
-  });
+      orderItems: true,
+    },
+  })
 }
 
 async function createPayment(values: any) {
   return await db.payment.create({
     data: values,
-  });
+  })
 }
 
-export {
-  getCartItems,
-  getProductWithImages,
-  createOrder,
-  updateOrder,
-  createPayment,
-};
+export { getCartItems, getProductWithImages, createOrder, updateOrder, createPayment }

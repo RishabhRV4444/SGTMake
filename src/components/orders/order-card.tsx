@@ -53,14 +53,14 @@ const OrderCard = ({
       <div className="relative mt-5 flex gap-2">
         <div className="relative z-30 flex-shrink-0 flex-grow-0 rounded-md shadow-md">
           <Image
-            src={process.env.NEXT_PUBLIC_IMAGE_URL + imageUrl[0]}
+            src={imageUrl[0].startsWith('/images') ? imageUrl[0] : process.env.NEXT_PUBLIC_IMAGE_URL + imageUrl[0]}
             alt="product image"
             className="rounded-md border border-gray-300 bg-gray-100"
             width={100}
             height={100}
           />
         </div>
-        {imageUrl.slice(1, 3).map((url, index) => (
+        {/* {imageUrl.slice(1, 3).map((url, index) => (
           <div
             key={index}
             className={`absolute flex-shrink-0 -top-${index + 1 * 1} left-${
@@ -75,7 +75,7 @@ const OrderCard = ({
               height={100}
             />
           </div>
-        ))}
+        ))} */}
         <h2 className="ms-3 self-center text-sm font-semibold tracking-widest md:ms-10 md:text-base">
           {imageUrl.length} items in this order
         </h2>

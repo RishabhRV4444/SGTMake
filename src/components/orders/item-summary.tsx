@@ -1,40 +1,71 @@
-import { ItemSummary } from "@/lib/types/types";
-import { formatCurrency } from "@/lib/utils";
-import Image from "next/image";
-import React from "react";
+import { formatCurrency } from "@/lib/utils"
+import Image from "next/image"
 
-const ItemSummary = (
-  props: Omit<Omit<Omit<ItemSummary, "productId">, "slug">, "basePrice">,
-) => {
+interface ItemSummaryProps {
+  imageUrl: string
+  title: string
+  quantity: number
+  offerPrice: number
+  color: string | null
+  isCustomProduct?: boolean
+  customProductData?: any
+}
+
+const ItemSummary = ({
+  imageUrl,
+  title,
+  quantity,
+  offerPrice,
+  color,
+  isCustomProduct,
+  customProductData,
+}: ItemSummaryProps) => {
+  // Determine the image source based on whether it's a custom product
+  const imageSrc = isCustomProduct
+    ? imageUrl // For custom products, imageUrl is already the full URL
+    : process.env.NEXT_PUBLIC_IMAGE_URL + imageUrl // For regular products, prepend the base URL
+
   return (
-    <>
-      <div className="flex items-center gap-4 py-4">
-        <Image
-          src={process.env.NEXT_PUBLIC_IMAGE_URL + props.imageUrl}
-          alt="product image"
-          className="rounded-md border border-gray-300 bg-gray-100"
-          width={80}
-          height={80}
-        />
+    <div className="flex items-center gap-4 py-4">
+      <Image
+        src={imageSrc || "/placeholder.svg"}
+        alt="product image"
+        className="rounded-md border border-gray-300 bg-gray-100"
+        width={60}
+        height={60}
+      />
+      <div className="grid flex-1 grid-cols-1 gap-3 md:grid-cols-2">
         <div>
-          <h5 className="cutoff-text text-sm text-black md:text-base">
-            {props.title}
-          </h5>
-          <p className="mt-1 text-xs text-muted-foreground md:text-sm">
-            {props.color}
-          </p>
+          <h3 className="max-w-md truncate text-sm">{title}</h3>
+          {color && <p className="text-xs text-muted-foreground">{color}</p>}
+
+          {/* Display custom product details if available */}
+          {isCustomProduct && customProductData?.options && (
+            <div className="mt-1">
+              {Object.entries(customProductData.options).map(([key, value]) => {
+                // Skip non-display fields
+                if (["quantity", "remarks", "totalPrice", "fastenerType", "image"].includes(key)) {
+                  return null
+                }
+                return (
+                  <p key={key} className="text-xs text-gray-600">
+                    {key.charAt(0).toUpperCase() + key.slice(1)}: {value as string}
+                  </p>
+                )
+              })}
+            </div>
+          )}
         </div>
-        <div className="ms-auto">
-          <span className="block font-Roboto text-sm font-medium md:text-base">
-            {formatCurrency(props.offerPrice)}
-          </span>
-          <p className="mt-1 text-end text-xs text-muted-foreground md:text-sm">
-            Qty: {props.quantity}
+        <div className="grid grid-cols-2">
+          <p className="flex items-center gap-0.5 md:justify-center">
+            <span className="text-xs">&#x2716;</span>
+            {quantity}
           </p>
+          <h1 className="text-right font-Roboto font-medium">{formatCurrency(offerPrice)}</h1>
         </div>
       </div>
-    </>
-  );
-};
+    </div>
+  )
+}
 
-export default ItemSummary;
+export default ItemSummary

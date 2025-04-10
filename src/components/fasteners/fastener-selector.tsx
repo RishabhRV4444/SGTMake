@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { useRouter } from "next/navigation"
-import { Loader2, Minus, Plus } from "lucide-react"
-import { toast } from "sonner"
+import { Minus, Plus } from "lucide-react"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import FastenerActions from "./fastener-actions"
 
 // Define the base fastener type
 export interface FastenerOption {
@@ -40,12 +39,9 @@ export interface SelectedFastenerOptions {
 interface FastenerSelectorProps {
   config: FastenerConfig
   activeCategory: string
-  onAddToCart: (formData: any) => Promise<void>
 }
 
-export default function FastenerSelector({ config, activeCategory, onAddToCart }: FastenerSelectorProps) {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+export default function FastenerSelector({ config, activeCategory }: FastenerSelectorProps) {
   const [quantity, setQuantity] = useState(1)
 
   // Dynamically build the Zod schema based on the config
@@ -122,40 +118,52 @@ export default function FastenerSelector({ config, activeCategory, onAddToCart }
     setValue("quantity", newQuantity)
   }
 
-  const onSubmit = async (data: any) => {
-    setIsLoading(true)
-    try {
-      const totalPrice = calculateTotalPrice(data)
+  const formValues: Record<string, any> = watch()
+  const totalPrice = calculateTotalPrice(formValues)
 
-      // Add total price to the form data
-      const formData = {
-        ...data,
-        totalPrice,
-        fastenerType: config.type,
-        image: config.image,
-      }
+  // Format the fastener data for the cart
+  const formatFastenerData = () => {
+    // Create a descriptive title based on the selected options
+    const parts: string[] = [config.type]
 
-      await onAddToCart(formData)
-      toast.success(`${config.type} added to cart`)
+    // Add size if available
+    if (formValues.size) {
+      parts.push(formValues.size as string)
+    }
 
-      // Reset form after successful submission
-      reset({
-        quantity: 1,
-        remarks: "",
-      })
-      setQuantity(1)
-    } catch (error) {
-      console.error("Error adding to cart:", error)
-      toast.error("Failed to add item to cart")
-    } finally {
-      setIsLoading(false)
+    // Add material if available
+    if (formValues.material) {
+      parts.push(formValues.material as string)
+    }
+
+    // Add length for bolts
+    if (formValues.length) {
+      parts.push(`${formValues.length}mm`)
+    }
+
+    // Add type information
+    if (formValues.type) {
+      parts.push(formValues.type as string)
+    }
+
+    // Add head type for bolts
+    if (formValues.headType) {
+      parts.push(`${formValues.headType} Head`)
+    }
+
+    const title = parts.join(" - ")
+
+    return {
+      ...formValues,
+      fastenerType: config.type,
+      image: config.image,
+      totalPrice,
+      title,
     }
   }
 
-  const formValues: Record<string, any> = watch()
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <div className="space-y-6">
       {/* Render each option category */}
       <AnimatePresence mode="wait">
         {Object.entries(config.options).map(([key, optionConfig]) => {
@@ -188,14 +196,18 @@ export default function FastenerSelector({ config, activeCategory, onAddToCart }
                         ? "bg-orange-500 text-white border-orange-500"
                         : "hover:bg-gray-100 border-gray-300"
                     }`}
-                    onClick={() => setValue(key, option.id, { shouldValidate: true })}
+                    onClick={() => setValue(key as "quantity" | "remarks", option.id, { shouldValidate: true })}
                   >
                     {option.name}
                   </button>
                 ))}
               </div>
 
-              {errors[key] && <p className="text-red-500 text-sm mt-1">{errors[key]?.message as string}</p>}
+              {errors[key as keyof typeof errors] && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors[key as keyof typeof errors]?.message as string}
+                </p>
+              )}
             </motion.div>
           )
         })}
@@ -256,27 +268,19 @@ export default function FastenerSelector({ config, activeCategory, onAddToCart }
         <textarea className="w-full p-3 border rounded-md" placeholder="Write here" rows={4} {...register("remarks")} />
       </motion.div>
 
-      {/* Add to Cart Button */}
+      {/* Price Display */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2, delay: 0.4 }}
+        className="text-right"
       >
-        <button
-          type="submit"
-          className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-4 py-2 transition-colors"
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <span className="flex items-center">
-              <Loader2 className="animate-spin mr-2 h-4 w-4" />
-              Adding...
-            </span>
-          ) : (
-            "Add to Cart"
-          )}
-        </button>
+        <p className="text-sm text-gray-600">Total Price:</p>
+        <p className="text-2xl font-bold">₹{totalPrice.toFixed(2)}</p>
       </motion.div>
-    </form>
+
+      {/* Add to Cart and Buy Now Buttons */}
+      <FastenerActions fastenerData={formatFastenerData()} quantity={quantity} />
+    </div>
   )
 }

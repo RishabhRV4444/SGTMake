@@ -1,14 +1,14 @@
-"use client";
+"use client"
 
-import { deleteCookie } from "cookies-next";
-import { usePathname } from "next/navigation";
+import { deleteCookie } from "cookies-next"
+import { usePathname } from "next/navigation"
 
 const RemoveCheckoutCookie = () => {
-  const pathname = usePathname();
+  const pathname = usePathname()
   if (pathname !== "/checkout") {
-    deleteCookie("checkout");
+    deleteCookie("checkout")
   }
-  return <></>;
-};
+  return <></>
+}
 
-export default RemoveCheckoutCookie;
+export default RemoveCheckoutCookie

@@ -100,11 +100,17 @@ export type CartItemProps = {
   url: string;
 };
 
-export type CheckoutItemProps = {
-  productId: string;
-  quantity: number;
-  color: string | null;
-};
+// export type CheckoutItemProps = {
+//   isCustomProduct:boolean
+//   productId: string|null;
+//   quantity: number;
+//   color: string | null;
+//   basePrice: number;
+//   offerPrice: number;
+//   title: string | null;
+//   image: string | null;
+//   customProductData: Record<string, any>;
+// };
 
 export type CheckoutItemRes = Res & { products: ItemSummaryProps[] | null };
 
@@ -117,33 +123,33 @@ export type ItemSummaryProps = {
   image: string;
 };
 
-export type CartItemRes = Res & { item: CartItemProps | null };
-export type CartItemsRes = Res & { item: CartItemProps[] | null };
+// export type CartItemRes = Res & { item: CartItemProps | null };
+// export type CartItemsRes = Res & { item: CartItemProps[] | null };
 
-export type CartItemQuantity = {
-  itemId: string;
-  quantity: number;
-};
+// export type CartItemQuantity = {
+//   itemId: string;
+//   quantity: number;
+// };
 
-export type CartItemQuantityRes = Res & { item: CartItemQuantity | null };
+// export type CartItemQuantityRes = Res & { item: CartItemQuantity | null };
 
-export type PaymentRes = Res & {
-  id: string;
-  currency: string;
-  amount: string | number;
-  orderId: string;
-};
+// export type PaymentRes = Res & {
+//   id: string;
+//   currency: string;
+//   amount: string | number;
+//   orderId: string;
+// };
 
-export type ItemSummary = {
-  productId: string;
-  slug: string;
-  color: string | null;
-  title: string;
-  quantity: number;
-  basePrice: number;
-  offerPrice: number;
-  imageUrl: string;
-};
+// export type ItemSummary = {
+//   productId: string;
+//   slug: string;
+//   color: string | null;
+//   title: string;
+//   quantity: number;
+//   basePrice: number;
+//   offerPrice: number;
+//   imageUrl: string;
+// };
 
 export type SingleOrderRes = Res & {
   order: {
@@ -196,6 +202,117 @@ export type CategoryProduct = {
   basePrice: number;
   stock: number;
 };
+// Add or update these types in your types.ts file
+
+export interface ItemSummary {
+  title: string
+  slug?: string
+  productId?: string
+  color: string | null
+  quantity: number
+  basePrice?: number
+  offerPrice: number
+  imageUrl: string
+  isCustomProduct?: boolean
+  customProductData?: any
+}
+export interface CustomProduct {
+  title: string
+  basePrice: number
+  offerPrice: number
+  image: string
+  options: Record<string, any>    
+}
+export interface CartItem {
+  itemId: string
+  pid: string
+  slug?: string
+  title: string
+  image: string
+  basePrice: number
+  offerPrice: number
+  color: string | null
+  quantity: number
+  url?: string
+  customProduct?: CategoryProduct // Add this field for fasteners
+}
+
+export interface CartItemsRes {
+  success: boolean
+  item: CartItem[]
+}
+
+export interface CartItemRes {
+  success: boolean
+  item: any
+}
+
+export interface CartItemQuantity {
+  itemId: string
+  quantity: number
+}
+
+export interface CartItemQuantityRes {
+  success: boolean
+  item: any
+}
+
+export interface CheckoutItemProps {
+  productId: string
+  quantity: number
+  color?: string | null
+  basePrice?: number
+  offerPrice?: number
+  title?: string
+  image?: string
+  isCustomProduct?: boolean
+  customProductData?: CategoryProduct
+}
+
+export interface PaymentRes {
+  id: string
+  amount: number
+  currency: string
+  orderId: string
+}
+
+export interface CheckoutProduct {
+  id: string
+  quantity: number
+  basePrice: number
+  offerPrice: number
+  title: string
+  image: string
+  isCustomProduct?: boolean
+  customProductData?: CategoryProduct
+}
+
+export interface CheckoutResponse {
+  products: CheckoutProduct[]
+}
+
+export interface OrderResponse {
+  order: {
+    address: {
+      id: string
+      name: string
+      phone: string
+      alternate_phone: string
+      pincode: string
+      locality: string
+      address: string
+      district: string
+      state: string
+      is_default: boolean
+    }
+    orderItems: ItemSummary[]
+    orderDate: string
+    payment_verified: boolean
+    method: string | null
+    via: string | null
+  }
+}
+
 
 export type MarqueeOffersRes = Res & {
   offers: MarqueeOffers[];

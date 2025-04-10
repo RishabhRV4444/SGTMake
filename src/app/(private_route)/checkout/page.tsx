@@ -1,26 +1,24 @@
-import DeliveryAddress from "@/components/checkout/delivery-address";
-import ItemSummary from "@/components/checkout/item-summary";
-import PriceDetails from "@/components/checkout/price-details";
-import Container from "@/components/container";
-import { getAddressServer } from "@/lib/api/address/get-address";
-import { getCheckout } from "@/lib/api/checkout/get-checkout";
-import { Hydrate, QueryClient, dehydrate } from "@tanstack/react-query";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import DeliveryAddress from "@/components/checkout/delivery-address"
+import ItemSummary from "@/components/checkout/item-summary"
+import PriceDetails from "@/components/checkout/price-details"
+import Container from "@/components/container"
+import { getAddressServer } from "@/lib/api/address/get-address"
+import { getCheckout } from "@/lib/api/checkout/get-checkout"
+import { Hydrate, QueryClient, dehydrate } from "@tanstack/react-query"
+import { revalidatePath } from "next/cache"
+import { redirect } from "next/navigation"
 
 const Checkout = async () => {
-  revalidatePath("/checkout", "layout");
-  const data = await getCheckout();
-  if (!data) redirect("/");
+  revalidatePath("/checkout", "layout")
+  const data = await getCheckout()
+  if (!data) redirect("/")
 
-  const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(["user", "address"], getAddressServer);
-  const dehydratedState = dehydrate(queryClient);
+  const queryClient = new QueryClient()
+  await queryClient.prefetchQuery(["user", "address"], getAddressServer)
+  const dehydratedState = dehydrate(queryClient)
 
-  const subtotal =
-    data.products?.reduce((acc, curr) => acc + curr.basePrice, 0) || 0;
-  const total =
-    data.products?.reduce((acc, curr) => acc + curr.offerPrice, 0) || 0;
+  const subtotal = data.products?.reduce((acc, curr) => acc + curr.basePrice, 0) || 0
+  const total = data.products?.reduce((acc, curr) => acc + curr.offerPrice, 0) || 0
 
   return (
     <Container className="py-0 md:py-0">
@@ -40,6 +38,8 @@ const Checkout = async () => {
               basePrice={product.basePrice}
               quantity={product.quantity}
               title={product.title}
+              isCustomProduct={product.isCustomProduct}
+              customProductData={product.customProductData}
             />
           ))}
           <div className="mt-10 grid grid-cols-2 px-5">
@@ -48,7 +48,7 @@ const Checkout = async () => {
         </div>
       </div>
     </Container>
-  );
-};
+  )
+}
 
-export default Checkout;
+export default Checkout
