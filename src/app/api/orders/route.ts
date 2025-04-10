@@ -46,14 +46,16 @@ export async function GET(req: NextRequest) {
       // Get images for all order items
       const images = order.orderItems.map((orderItem) => {
         // Handle custom products
-        if (orderItem.customProduct) {
-          return orderItem.customProduct.image || "/placeholder.svg"
+        if (orderItem.customProduct ) {
+          return typeof orderItem.customProduct === "object" && "image" in orderItem.customProduct
+            ? orderItem.customProduct.image
+            : "/placeholder.svg"
         }
 
         // Handle regular products
         return getImageThumbnail(
           {
-            images: orderItem.product.images,
+            images: orderItem.product ? orderItem.product.images : [],
           },
           orderItem.color,
         )

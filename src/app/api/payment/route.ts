@@ -81,15 +81,15 @@ export async function POST(req: NextRequest) {
       // Calculate total amount and create order items
       for (const cartItem of cartItems.cartItems) {
         // Handle custom products (fasteners)
-        if (cartItem.customProduct ) {
-          const itemPrice = cartItem.customProduct.offerPrice || 0
+        if (cartItem.customProduct && typeof cartItem.customProduct === "object" && "offerPrice" in cartItem.customProduct) {
+          const itemPrice = (cartItem.customProduct.offerPrice as number) || 0
           const itemTotal = itemPrice * cartItem.quantity
           amount += itemTotal
 
           orderItems.push({
             quantity: cartItem.quantity,
             color: null,
-            basePrice: cartItem.customProduct.basePrice * cartItem.quantity,
+            basePrice: (typeof cartItem.customProduct.basePrice === "number" ? cartItem.customProduct.basePrice : 0) * cartItem.quantity,
             offerPrice: itemPrice * cartItem.quantity,
             customProduct: cartItem.customProduct,
           })

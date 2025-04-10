@@ -89,14 +89,14 @@ export async function GET(req: NextRequest, { params }: { params: { oid: string 
       // Handle custom products
       if (orderItem.customProduct  ) {
         return {
-          title: orderItem.customProduct.title || "Custom Product",
+          title: (orderItem.customProduct as { title?: string }).title || "Custom Product",
           slug: "fasteners", // Use a default slug for custom products
           productId: `custom-${orderItem.id}`, // Generate a unique ID
           color: null,
           quantity: orderItem.quantity,
           basePrice: orderItem.basePrice,
           offerPrice: orderItem.offerPrice,
-          imageUrl: orderItem.customProduct.image || "/placeholder.svg",
+          imageUrl: (orderItem.customProduct as { image?: string }).image || "/placeholder.svg",
           isCustomProduct: true,
           customProductData: orderItem.customProduct,
         }
