@@ -7,6 +7,7 @@ import { Upload, CheckCircle, AlertCircle, Loader2, Plus, Minus } from "lucide-r
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useSession } from "next-auth/react"
 
 // Define allowed file types and max size
 const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB
@@ -136,6 +137,7 @@ export default function ManufacturingServices() {
     resolver: zodResolver(getFormSchema()),
     defaultValues: getDefaultValues(),
   })
+  const session = useSession();
 
   // Reset form when service changes
   useEffect(() => {
@@ -382,7 +384,7 @@ export default function ManufacturingServices() {
         <div className="bg-green-50 my-6 max-w-6xl mx-auto p-6 rounded-xl border border-green-200 text-center">
           <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
           <h2 className="text-2xl font-medium text-green-800 mb-2">Order Submitted Successfully</h2>
-          <p className="text-green-700 mb-2">Thank you for your order. We will get back to you soon with a quote.</p>
+          <p className="text-green-700 mb-2">Thanks {session.data?.user?.name }  for your order. We will get back to you soon with a quote.</p>
           {submittedServiceId && <p className="text-green-700 mb-4">Service ID: {submittedServiceId}</p>}
           <button
             onClick={() => {
