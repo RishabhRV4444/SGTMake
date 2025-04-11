@@ -8,9 +8,11 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Image from "next/image"
 
+import { useSession } from "next-auth/react"
+
 // Define allowed file types and max size
 const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB
-const ALLOWED_FILE_TYPES = [ "image/"]
+const ALLOWED_FILE_TYPES = ["image/"]
 
 // Define the form schema
 const formSchema = z.object({
@@ -29,6 +31,8 @@ const formSchema = z.object({
   wire: z.object({
     awg: z.string().min(1, "AWG is required"),
     length: z.string().min(1, "Length is required"),
+    customLength: z.string().optional(),
+    customLengthUnit: z.string().optional(),
     color: z.string().min(1, "Color is required"),
     twisted: z.boolean().optional(),
     customColor: z.string().optional(),
@@ -123,6 +127,8 @@ export default function WiringHarnessForm() {
   const [leftAdditionalConnectors, setLeftAdditionalConnectors] = useState<{ id: string }[]>([])
   const [rightAdditionalConnectors, setRightAdditionalConnectors] = useState<{ id: string }[]>([])
 
+  const session = useSession();
+
   const {
     register,
     handleSubmit,
@@ -141,6 +147,8 @@ export default function WiringHarnessForm() {
       wire: {
         awg: "",
         length: "",
+        customLength: "",
+        customLengthUnit: "mm",
         color: "",
         twisted: false,
         customColor: "",
@@ -156,6 +164,8 @@ export default function WiringHarnessForm() {
   })
 
   const wireColor = watch("wire.color")
+  const wireLength = watch("wire.length")
+  const customLengthUnit = watch("wire.customLengthUnit")
   const wireCustomColor = watch("wire.customColor")
   const wireTwisted = watch("wire.twisted")
 
@@ -249,6 +259,32 @@ export default function WiringHarnessForm() {
     }
   }
 
+  const removeLeftConnector = (idToRemove: string) => {
+    setLeftAdditionalConnectors(leftAdditionalConnectors.filter((connector) => connector.id !== idToRemove))
+
+    // Update the form data to remove this connector
+    const currentAdditionalConnectors = [...(watch("leftConnector.additionalConnectors") || [])]
+    const indexToRemove = leftAdditionalConnectors.findIndex((c) => c.id === idToRemove)
+
+    if (indexToRemove !== -1) {
+      currentAdditionalConnectors.splice(indexToRemove, 1)
+      setValue("leftConnector.additionalConnectors", currentAdditionalConnectors)
+    }
+  }
+
+  const removeRightConnector = (idToRemove: string) => {
+    setRightAdditionalConnectors(rightAdditionalConnectors.filter((connector) => connector.id !== idToRemove))
+
+    // Update the form data to remove this connector
+    const currentAdditionalConnectors = [...(watch("rightConnector.additionalConnectors") || [])]
+    const indexToRemove = rightAdditionalConnectors.findIndex((c) => c.id === idToRemove)
+
+    if (indexToRemove !== -1) {
+      currentAdditionalConnectors.splice(indexToRemove, 1)
+      setValue("rightConnector.additionalConnectors", currentAdditionalConnectors)
+    }
+  }
+
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <h1 className="text-3xl font-semibold mb-6">Wiring Harness</h1>
@@ -256,8 +292,10 @@ export default function WiringHarnessForm() {
       {formStatus === "success" ? (
         <div className="bg-green-50 p-6 rounded-xl border border-green-200 text-center">
           <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-medium text-green-800 mb-2">Order Submitted Successfully</h2>
-          <p className="text-green-700 mb-2">Thank you for your order. We will get back to you soon with a quote.</p>
+          <h2 className="text-2xl font-medium text-green-800 mb-2">Thanks {session.data?.user?.name } for Order Successfully </h2>
+          <p className="text-green-700 mb-2">
+           We will get back to you soon with a quote.
+          </p>
           {submittedServiceId && <p className="text-green-700 mb-4">Service ID: {submittedServiceId}</p>}
           <button
             onClick={() => window.location.reload()}
@@ -328,12 +366,10 @@ export default function WiringHarnessForm() {
             )}
 
             {fileUploadStatus === "idle" && !file && (
-              <p className="mt-2 text-sm text-gray-500">
-                Upload your reference design or specification (PDF, Excel, Word, Images, STP)
-              </p>
+              <p className="mt-2 text-sm text-gray-500">Upload Images of Harness</p>
             )}
           </div>
-{/* 
+          {/* 
           <div className="mb-8">
             <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600" onClick={() => {}}>
               Get a Quote
@@ -438,7 +474,7 @@ export default function WiringHarnessForm() {
                 </div>
 
                 {leftAdditionalConnectors.map((connector, index) => (
-                  <div key={connector.id} className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div key={connector.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                     <div>
                       <label className="block text-sm mb-1">Housing Part</label>
                       <select
@@ -466,6 +502,16 @@ export default function WiringHarnessForm() {
                           </option>
                         ))}
                       </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm mb-1">Remove</label>
+                      <button
+                        type="button"
+                        onClick={() => removeLeftConnector(connector.id)}
+                        className="flex items-center text-red-500 border border-red-500 rounded-md px-2 py-1"
+                      >
+                        <Minus className="w-4 h-4 mr-1" /> Remove
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -512,6 +558,34 @@ export default function WiringHarnessForm() {
                     {errors.wire?.color && <p className="text-red-500 text-xs mt-1">{errors.wire.color.message}</p>}
                   </div>
                 </div>
+
+                {wireLength === "custom" && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div className="flex items-center gap-2">
+                      <div className="flex-grow">
+                        <label className="block text-sm mb-1">Custom Length</label>
+                        <input
+                          type="number"
+                          {...register("wire.customLength")}
+                          placeholder="Enter length"
+                          className="w-full border p-2 rounded-md bg-[#FAFAFA]"
+                        />
+                      </div>
+                      <div className="w-24 mt-6">
+                        <select
+                          {...register("wire.customLengthUnit")}
+                          className="w-full border p-2 rounded-md bg-[#FAFAFA]"
+                        >
+                          <option value="mm">mm</option>
+                          <option value="cm">cm</option>
+                          <option value="m">m</option>
+                          <option value="in">in</option>
+                          <option value="ft">ft</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -605,7 +679,7 @@ export default function WiringHarnessForm() {
                 </div>
 
                 {rightAdditionalConnectors.map((connector, index) => (
-                  <div key={connector.id} className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div key={connector.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                     <div>
                       <label className="block text-sm mb-1">Housing Part</label>
                       <select
@@ -634,6 +708,16 @@ export default function WiringHarnessForm() {
                         ))}
                       </select>
                     </div>
+                    <div>
+                      <label className="block text-sm mb-1">Remove</label>
+                      <button
+                        type="button"
+                        onClick={() => removeRightConnector(connector.id)}
+                        className="flex items-center text-red-500 border border-red-500 rounded-md px-2 py-1"
+                      >
+                        <Minus className="w-4 h-4 mr-1" /> Remove
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -641,64 +725,64 @@ export default function WiringHarnessForm() {
 
             {/* Quantity */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div className="bg-white p-6 rounded-lg border mb-6">
-              <h2 className="text-xl font-semibold mb-4">Quantity (pcs)</h2>
-              <div className="flex items-center">
+              <div className="bg-white p-6 rounded-lg border mb-6">
+                <h2 className="text-xl font-semibold mb-4">Quantity (pcs)</h2>
+                <div className="flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const currentQuantity = watch("quantity")
+                      if (currentQuantity > 1) {
+                        setValue("quantity", currentQuantity - 1)
+                      }
+                    }}
+                    className="border rounded-md p-2"
+                    disabled={watch("quantity") <= 1}
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <Controller
+                    name="quantity"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        type="number"
+                        {...field}
+                        onChange={(e) => field.onChange(Number.parseInt(e.target.value) || 1)}
+                        min="1"
+                        className="w-16 text-center mx-2 border rounded-md p-2"
+                      />
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const currentQuantity = watch("quantity")
+                      setValue("quantity", currentQuantity + 1)
+                    }}
+                    className="border rounded-md p-2"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+                {errors.quantity && <p className="text-red-500 text-xs mt-1">{errors.quantity.message}</p>}
+              </div>
+              <div className="flex justify-end items-center">
                 <button
-                  type="button"
-                  onClick={() => {
-                    const currentQuantity = watch("quantity")
-                    if (currentQuantity > 1) {
-                      setValue("quantity", currentQuantity - 1)
-                    }
-                  }}
-                  className="border rounded-md p-2"
-                  disabled={watch("quantity") <= 1}
+                  type="submit"
+                  className="mt-6 bg-orange-500 text-white px-6 py-2  hover:bg-orange-600 flex items-center justify-center disabled:bg-gray-400 disabled:cursor-not-allowed w-max rounded-full h-min  "
+                  disabled={formStatus === "submitting" || fileUploadStatus === "uploading"}
                 >
-                  <Minus className="w-4 h-4" />
-                </button>
-                <Controller
-                  name="quantity"
-                  control={control}
-                  render={({ field }) => (
-                    <input
-                      type="number"
-                      {...field}
-                      onChange={(e) => field.onChange(Number.parseInt(e.target.value) || 1)}
-                      min="1"
-                      className="w-16 text-center mx-2 border rounded-md p-2"
-                    />
+                  {formStatus === "submitting" ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    "Confirm Cable Plan"
                   )}
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    const currentQuantity = watch("quantity")
-                    setValue("quantity", currentQuantity + 1)
-                  }}
-                  className="border rounded-md p-2"
-                >
-                  <Plus className="w-4 h-4" />
                 </button>
               </div>
-              {errors.quantity && <p className="text-red-500 text-xs mt-1">{errors.quantity.message}</p>}
-            </div>
-            <div className="flex justify-end items-center">
-            <button
-              type="submit"
-              className="mt-6 bg-orange-500 text-white px-6 py-2  hover:bg-orange-600 flex items-center justify-center disabled:bg-gray-400 disabled:cursor-not-allowed w-max rounded-full h-min  "
-              disabled={formStatus === "submitting" || fileUploadStatus === "uploading"}
-            >
-              {formStatus === "submitting" ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                "Confirm Cable Plan"
-              )}
-            </button>
-            </div>
             </div>
             {/* Additional Notes */}
             {/* <div className="bg-white p-6 rounded-lg border mb-6">
@@ -719,12 +803,9 @@ export default function WiringHarnessForm() {
                 </p>
               </div>
             )} */}
-
-          
           </form>
         </>
       )}
     </div>
   )
 }
-

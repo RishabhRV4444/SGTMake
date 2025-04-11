@@ -7,7 +7,7 @@ import Image from "next/image";
 export default function IndustryComponent() {
     const data = [
         { tag: "Fasteners", img: "/fastner.png",link:"/fasteners" },
-        { tag: "Tools", img: "/tools.png",link:"store/c/tools-&-equipments" },
+        { tag: "Tools", img: "/tools.png",link:"store/c/tools-and-equipments" },
         { tag: "Connection & Wires", img: "/wiring.png",link:"/connectors-wires"  },
         { tag: "EV Parts", img: "/evpart.png",link:"/store/c/ev-parts"  },
     ];

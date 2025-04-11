@@ -3,7 +3,7 @@ import type { FastenerConfig } from "@/components/fasteners/fastener-selector"
 // Bolt configuration
 export const boltConfig: FastenerConfig = {
   type: "Bolt",
-  image: "/images/fasteners/bolt.jpg", // Replace with your actual image path
+  image: "/images/fasteners/bolts.jpg", // Replace with your actual image path
   basePrice: 0.5, // Base price for the simplest bolt
   options: {
     headType: {
@@ -65,12 +65,22 @@ export const boltConfig: FastenerConfig = {
       label: "Material Type",
       required: true,
       options: [
-        { id: "blackened", name: "Blackened" },
-        { id: "zinc-coated", name: "Zinc Coated" },
+        { id: "copper", name: "Copper" },
+        { id: "mild-steel", name: "Mild Steel" },
         { id: "brass", name: "Brass" },
         { id: "stainless-steel", name: "Stainless Steel" },
       ],
     },
+    coating: {
+      label: "Coating Type",
+      required: true,
+      options: [
+        { id: "blackened", name: "Blackened" },
+        { id: "zinc-coated", name: "Zinc Coated" },
+        { id: "nickel-coated", name: "Nickel Coated" },
+      ],
+    },
+    
   },
 }
 
@@ -206,7 +216,7 @@ export const revNutsConfig: FastenerConfig = {
 
 // Sand Offs configuration
 export const sandOffsConfig: FastenerConfig = {
-  type: "Sand Offs",
+  type: "Stand Offs",
   image: "/images/fasteners/sand-offs.webp", // Replace with your actual image path
   basePrice: 0.45, // Base price for the simplest sand off
   options: {
