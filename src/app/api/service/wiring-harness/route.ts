@@ -23,6 +23,8 @@ const formSchema = z.object({
     length: z.string().min(1, "Length is required"),
     color: z.string().min(1, "Color is required"),
     twisted: z.boolean().optional(),
+    customLength: z.string().optional(),
+    customLengthUnit: z.string().optional(),
     customColor: z.string().optional(),
   }),
   rightConnector: z.object({

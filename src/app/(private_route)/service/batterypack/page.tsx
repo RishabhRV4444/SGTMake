@@ -6,6 +6,7 @@ import { Upload, CheckCircle, AlertCircle, Loader2 } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useSession } from "next-auth/react"
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB
 const ALLOWED_FILE_TYPES = ["application/pdf", "application/vnd.ms-excel", "application/msword", "image/", "model/step"]
@@ -55,6 +56,7 @@ export default function BatteryPackForm() {
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   })
+  const session = useSession();
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -142,7 +144,7 @@ export default function BatteryPackForm() {
         <div className="bg-green-50 p-6 rounded-xl border border-green-200 text-center">
           <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
           <h2 className="text-2xl font-medium text-green-800 mb-2">Inquiry Submitted Successfully</h2>
-          <p className="text-green-700 mb-4">Thank you for your inquiry. We will get back to you soon.</p>
+          <p className="text-green-700 mb-4">Thanks {session.data?.user?.name } for your inquiry. We will get back to you soon.</p>
           <button
             onClick={() => window.location.reload()}
             className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700"

@@ -27,7 +27,7 @@ export const navItems: NavItem[] = [
       },
       {
         label: "Tools & Equipment",
-        link: "store/c/tools-&-equipments",
+        link: "store/c/tools-and-equipments",
       },
       {
         label: "EV Parts",
@@ -45,15 +45,15 @@ export const navItems: NavItem[] = [
     children: [
       {
         label: "CNC Machining",
-        link: {pathname:"/service",query:{"service":"cnc-machining"}}
+        link: "/service?service=cnc-machining"
       },
       {
         label: "Laser Cutting",
-        link: {pathname:"/service",query:{"service":"laser-cutting"}}
+        link: "/service?service=laser-cutting"
       },
       {
         label: "3D Printing",
-        link: {pathname:"/service",query:{"service":"designing"}}
+        link: "/service?service=designing"
       },
       {
         label: "Wiring Harness",
