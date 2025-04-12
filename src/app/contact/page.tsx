@@ -46,9 +46,10 @@ export default function ContactForm() {
 
     try {
       // Replace these with your actual EmailJS service ID, template ID, and public key
-      const serviceId = "YOUR_SERVICE_ID"
-      const templateId = "YOUR_TEMPLATE_ID"
-      const publicKey = "YOUR_PUBLIC_KEY"
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
+      
 
       await emailjs.send(
         serviceId,
