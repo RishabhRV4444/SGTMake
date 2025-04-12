@@ -27,7 +27,7 @@ export default function AboutPage() {
                     <ServeCard
                         img="/car.png"
                         head="Our Story: Building the Future"
-                        desc1="SGTMake is a dynamic and experienced company dedicated to transforming innovative ideas into tangible realities. With over 8 years of expertise, we serve a diverse range of clients, from individual inventors and small businesses to large corporations and original equipment manufacturers (OEMs).. 
+                        desc1="SGTMake is a dynamic and experienced company dedicated to transforming innovative ideas into tangible realities. With over 8 years of expertise, we serve a diverse range of clients, from individual inventors and small businesses to large corporations and original equipment manufacturers (OEMs).
 
 "                        desc2="Our focus is on fostering collaborative partnerships and providing the technical expertise needed to bring complex projects to fruition. We pride ourselves on a culture of precision, quality, and responsiveness, ensuring that every undertaking receives the dedicated attention it deserves."
                     />

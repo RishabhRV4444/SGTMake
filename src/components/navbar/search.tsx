@@ -1,7 +1,7 @@
 "use client";
 
 import { Input } from "@nextui-org/input";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Frown, History, Search as SearchIcon, Trash2 } from "lucide-react";
 import { CategoryProduct } from "@/lib/types/types";
 import { useSearch } from "@/api-hooks/use-search";
@@ -62,16 +62,35 @@ const Search = ({ bestSeller }: { bestSeller: CategoryProduct[] | null }) => {
     router.push(`/store/${slug}?pid=${pid}`);
     setShowDropdown(false);
   }
+  const inputRef = useRef<HTMLInputElement>(null)
+  const handleSearchButtonClick = () => {
+    setIsFocused(true)
+    setTimeout(() => {
+      inputRef.current?.focus()
+      setShowDropdown(true)
+    }, 300) // Wait for animation to complete before focusing
+  }
 
   return (
     <form
       onSubmit={searchProduct}
       className={`relative mx-auto  cursor-pointer  transition-all duration-400 ${isFocused ? "md:w-96" : "md:w-12 "}`}
       tabIndex={0}
-      onFocus={() => setShowDropdown(true)}
       onBlur={() => setShowDropdown(false)}
     >
+      {!isFocused && (
+        <button
+          type="button"
+          onClick={handleSearchButtonClick}
+          className=" hidden sm:block absolute md:flex items-center justify-center w-12 h-12 rounded-full z-10  -top-[0.13rem]  border"
+          aria-label="Search"
+        >
+          <SearchIcon className="" />
+        </button>
+      )}
+
       <Input
+       ref={inputRef}
         type="text"
         placeholder="Search..."
         value={searchKeyword}
@@ -92,12 +111,12 @@ const Search = ({ bestSeller }: { bestSeller: CategoryProduct[] | null }) => {
         }
       />
       <div
-        className={`scrollbar-thin absolute z-[9999] max-h-[500px] min-h-fit w-full overflow-y-scroll rounded-2xl bg-white p-4 shadow-lg ${
-          !showDropdown && "hidden"
+        className={`scrollbar-thin absolute z-[9999] max-h-[500px] min-h-fit w-full overflow-y-scroll rounded-2xl bg-white p-4 shadow-lg  ${
+          showDropdown ?"  block": "hidden "
         }`}
       >
         {!searchKeyword ? (
-          <div className="scrollbar-thin overflow-x-auto">
+          <div className="scrollbar-thin overflow-x-auto ">
             {/* Recently Searched */}
             {recentSearch.length !== 0 && (
               <>

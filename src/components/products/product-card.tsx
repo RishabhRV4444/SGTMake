@@ -85,7 +85,7 @@ const ProductCard = ({
 
       {/* Product Info */}
       <div className=" bg-white p-4">
-        <h3 className="font-medium text-lg">{title}</h3>
+        <h3 className="font-medium text-[clamp(1rem,1.2vw,1.8rem)] line-clamp-2 ">{title}</h3>
         <p className="text-sm text-gray-500">{description}</p>
         <p className="text-lg text-orange-500 font-semibold">
           {formatCurrency(price)}
