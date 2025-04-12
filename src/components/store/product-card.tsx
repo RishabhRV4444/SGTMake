@@ -22,8 +22,8 @@ const ProductCard = ({
 
 }: ProductCardProps) => {
   return (
-    <Card shadow="none" isPressable className=" relative group flex-1 bg-gray-200 h-96" radius="md">
-      <CardBody className= "  flex-grow-0 overflow-visible group-hover:p-1 ">
+    <Card shadow="none" isPressable className=" relative group flex-1 bg-gray-200 " radius="md">
+      <CardBody className= "  flex-grow-0 overflow-visible transition-all group-hover:p-1 ">
         <Image
           as={NextImage}
           shadow="none"
@@ -32,14 +32,14 @@ const ProductCard = ({
           height={400}
           isZoomed
           alt={title}
-          className="w-full overflow-hidden object-cover"
+          className="w-full overflow-hidden object-cover h-72"
           classNames={{
-            img: "hover:scale-110",
+            img: "hover:scale-110 transition-all",
           }}
           src={process.env.NEXT_PUBLIC_IMAGE_URL + image}
         />
       </CardBody>
-      <CardFooter className="    bg-[#ffffff9d] backdrop-blur-md rounded-md  flex flex-col w-full  ">
+      <CardFooter className="    bg-[#ffffff9d] backdrop-blur-md rounded-md  flex flex-col w-full  h-full ">
   
         <div className="">
                 <h2 className="text-md font-semibold line-clamp-1">{title}</h2>
