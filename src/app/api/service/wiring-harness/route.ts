@@ -40,7 +40,6 @@ const formSchema = z.object({
       .optional(),
   }),
   quantity: z.number().min(1, "Quantity must be at least 1"),
-  additionalNotes: z.string().optional(),
   file: z
     .object({
       url: z.string().optional(),
@@ -72,6 +71,7 @@ export async function POST(request: Request) {
         userId: session.user.id,
         fileUrl: fileData.url,
         filePublicId: fileData.public_id,
+        fileType: fileData.type,
         // Store all wiring harness form details in the formDetails JSON field
         formDetails: {
           type: "wiringHarness", // Identify the form type
@@ -79,7 +79,6 @@ export async function POST(request: Request) {
           wire: validatedData.wire,
           rightConnector: validatedData.rightConnector,
           quantity: validatedData.quantity,
-          additionalNotes: validatedData.additionalNotes || "",
         },
       },
     })

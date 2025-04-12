@@ -159,7 +159,6 @@ export default function WiringHarnessForm() {
         additionalConnectors: [],
       },
       quantity: 1,
-      additionalNotes: "",
     },
   })
 
@@ -784,25 +783,7 @@ export default function WiringHarnessForm() {
                 </button>
               </div>
             </div>
-            {/* Additional Notes */}
-            {/* <div className="bg-white p-6 rounded-lg border mb-6">
-              <h2 className="text-xl font-semibold mb-4">Additional Notes</h2>
-              <textarea
-                {...register("additionalNotes")}
-                className="w-full border p-3 rounded-md bg-[#FAFAFA]"
-                rows={4}
-                placeholder="Any special requirements or instructions"
-              ></textarea>
-            </div>
-
-            {errorMessage && formStatus === "error" && (
-              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-red-600">
-                <p className="flex items-center">
-                  <AlertCircle className="w-5 h-5 mr-2" />
-                  {errorMessage}
-                </p>
-              </div>
-            )} */}
+        
           </form>
         </>
       )}

@@ -50,6 +50,7 @@ export async function POST(request: Request) {
         userId: session.user.id,
         fileUrl: fileData.url,
         filePublicId: fileData.public_id,
+        fileType: fileData.type,
         // Store all battery pack form details in the formDetails JSON field
         formDetails: {
           type: "batteryPack", // Identify the form type
