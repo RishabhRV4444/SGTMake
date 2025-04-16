@@ -25,7 +25,7 @@ type ConnectorType =
   | "26 Pin Superseal"
   | "34 Pin Superseal"
 type ConnectorGender = "Male" | "Female" | "Set"
-type WireSize = "8 AWG" | "10 AWG" | "12 AWG" | "14 AWG" | "0.35 SQ mm" | "0.50 SQ mm" | "1 SQ mm"
+type WireSize = "8 AWG" | "10 AWG" | "12 AWG" | "14 AWG" | "22 AWG" | "20 AWG" | "17 AWG"
 type WireColor = "Red" | "Black" | "Yellow" | "Green" | "Blue" | "Pink" | "Brown" | "White"
 type WireLength = "5" | "10" | "30" | "custom"
 
@@ -217,9 +217,9 @@ export default function ConnectorsWiresPage() {
       basePrice = 25 // Base price for harness wires
 
       // Add price based on size
-      if (data.size === "0.35 SQ mm") basePrice += 5
-      else if (data.size === "0.50 SQ mm") basePrice += 10
-      else if (data.size === "1 SQ mm") basePrice += 15
+      if (data.size === "22 AWG") basePrice += 5
+      else if (data.size === "20 AWG") basePrice += 10
+      else if (data.size === "17 AWG") basePrice += 15
 
       // Add price based on length
       if (data.length) {
@@ -424,12 +424,7 @@ export default function ConnectorsWiresPage() {
                         {length}
                       </button>
                     ))}
-                    <button
-                      type="button"
-                      className="w-8 h-8 flex items-center justify-center rounded-md border border-gray-300 bg-white"
-                    >
-                      <Plus size={16} />
-                    </button>
+               
                   </div>
                   {errors.length && <p className="text-red-500 text-sm mt-1">{errors.length.message as string}</p>}
                 </div>
@@ -443,7 +438,7 @@ export default function ConnectorsWiresPage() {
                 <div className="mb-6">
                   <h2 className="text-base font-medium mb-2">Size</h2>
                   <div className="flex flex-wrap gap-2">
-                    {["0.35 SQ mm", "0.50 SQ mm", "1 SQ mm"].map((size) => (
+                    {["22 AWG", "20 AWG", "17 AWG"].map((size) => (
                       <button
                         key={size}
                         type="button"
@@ -495,12 +490,7 @@ export default function ConnectorsWiresPage() {
                         {length}
                       </button>
                     ))}
-                    <button
-                      type="button"
-                      className="w-8 h-8 flex items-center justify-center rounded-md border border-gray-300 bg-white"
-                    >
-                      <Plus size={16} />
-                    </button>
+                    
                   </div>
                   {errors.length && <p className="text-red-500 text-sm mt-1">{errors.length.message as string}</p>}
                 </div>

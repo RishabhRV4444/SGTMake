@@ -32,8 +32,8 @@ const Footer = () => {
         <div>
           <h3 className="font-semibold mb-3">Services</h3>
           <ul className="text-sm space-y-2">
-            <li><Link href={{pathname:"/service",query:{"service":"designing"}}}>3D Designing</Link></li>
-            <li><Link href={{pathname:"/service",query:{"service":"designing"}}}>3D Printing</Link></li>
+            <li><Link href="/contact">3D Designing</Link></li>
+            <li><Link href={{pathname:"/service",query:{"service":"3d-printing"}}}>3D Printing</Link></li>
             <li><Link href={{pathname:"/service",query:{"service":"cnc-machining"}}} >CNC Machining</Link></li>
             <li><Link href="/service/batterypack">Battery Packs</Link></li>
             <li><Link href={{pathname:"/service",query:{"service":"laser-cutting"}}}>Laser Cutting</Link></li>

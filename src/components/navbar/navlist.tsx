@@ -27,7 +27,7 @@ export const navItems: NavItem[] = [
       },
       {
         label: "Tools & Equipment",
-        link: "store/c/tools-and-equipments",
+        link: "/store/c/tools-and-equipments",
       },
       {
         label: "EV Parts",
@@ -53,7 +53,7 @@ export const navItems: NavItem[] = [
       },
       {
         label: "3D Printing",
-        link: "/service?service=designing"
+        link: "/service?service=3d-printing"
       },
       {
         label: "Wiring Harness",

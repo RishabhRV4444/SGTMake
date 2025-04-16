@@ -129,10 +129,19 @@ export const nutConfig: FastenerConfig = {
       label: "Material Type",
       required: true,
       options: [
-        { id: "blackened", name: "Blackened" },
-        { id: "zinc-coated", name: "Zinc Coated" },
+        { id: "copper", name: "Copper" },
+        { id: "mild-steel", name: "Mild Steel" },
         { id: "brass", name: "Brass" },
         { id: "stainless-steel", name: "Stainless Steel" },
+      ],
+    },
+    coating: {
+      label: "Coating Type",
+      required: true,
+      options: [
+        { id: "blackened", name: "Blackened" },
+        { id: "zinc-coated", name: "Zinc Coated" },
+        { id: "nickel-coated", name: "Nickel Coated" },
       ],
     },
   },

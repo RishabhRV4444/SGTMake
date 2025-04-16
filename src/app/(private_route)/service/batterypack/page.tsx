@@ -58,6 +58,18 @@ export default function BatteryPackForm() {
   })
   const session = useSession();
 
+  const FormFields = [
+    { name: "cellBrand", label: "Cell Brand" },
+    { name: "seriesConfig", label: "Series Config" }, 
+    { name: "parallelConfig", label: "Parallel Config" },
+    { name: "normalDischarge", label: "Normal Discharge" },
+    { name: "peakDischarge", label: "Peak Discharge" },
+    { name: "charging", label: "Charging" },
+    { name: "lifeCycle", label: "Life Cycle" },
+    { name: "packVoltage", label: "Pack Voltage" },
+    { name: "bmsChoice", label: "BMS Choice" },
+    { name: "modulusCount", label: "No. of Modules" },
+  ]
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const uploadedFile = e.target.files[0]
@@ -242,28 +254,17 @@ export default function BatteryPackForm() {
                 {errors.chemistry && <p className="text-red-500 text-sm">{errors.chemistry.message}</p>}
               </div>
 
-              {[
-                "cellBrand",
-                "seriesConfig",
-                "parallelConfig",
-                "normalDischarge",
-                "peakDischarge",
-                "charging",
-                "lifeCycle",
-                "packVoltage",
-                "bmsChoice",
-                "modulusCount",
-              ].map((field) => (
-                <div key={field}>
-                  <label className="block font-medium">{field.replace(/([A-Z])/g, " $1").trim()}</label>
+              {FormFields.map((field) => (
+                <div key={field.name}>
+                  <label className="block font-medium">{field.label}</label>
                   <input
-                    {...register(field as keyof FormData)}
+                    {...register(field.name as keyof FormData)}
                     className="w-full border p-3 rounded-md mt-1 bg-[#FAFAFA]"
                     placeholder="Write here"
                     disabled={formStatus === "submitting"}
                   />
-                  {errors[field as keyof FormData] && (
-                    <p className="text-red-500 text-sm">{errors[field as keyof FormData]?.message}</p>
+                  {errors[field.name as keyof FormData] && (
+                    <p className="text-red-500 text-sm">{errors[field.name as keyof FormData]?.message}</p>
                   )}
                 </div>
               ))}

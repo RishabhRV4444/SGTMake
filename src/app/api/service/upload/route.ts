@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import cloudinary from "@/lib/cloudinary";
 import { Readable } from "stream";
-
+import { uid } from "uid";
 // Define allowed file types and max size
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 const ALLOWED_FILE_TYPES = [
@@ -10,12 +10,32 @@ const ALLOWED_FILE_TYPES = [
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/pdf",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "image/jpeg",
+  "image/png",
+  "image/jpg",
+  "text/csv",
   "image/jpeg",
   "image/png",
   "image/gif",
   "image/webp",
   "model/step",
+  "model/stl",
   "application/step",
+  "application/sla",         // alternate .stl
+  "application/stl",         // alternate .stl
+  "text/plain",              // sometimes .obj files are uploaded as text/plain
+  "model/obj",               // .obj (rare, fallback MIME type)
+  "application/vnd.ms-3mfdocument", // .3mf
+  "application/x-3mf",       // alternate .3mf MIME
+  "application/x-x3g",  
+  "image/vnd.dxf",
+  "application/dxf",
+  "application/octet-stream",
 ];
 
 // Helper function to convert File to buffer
@@ -47,13 +67,23 @@ export async function POST(request: NextRequest): Promise<Response> {
     }
 
     const buffer = await fileToBuffer(file);
+    const fileExtension = file.name.split('.').pop(); // e.g., "stl", "dxf", etc.
+    let uploadLogic:any =  {
+    folder: "services",
+    resource_type: "auto", // Automatically detect the resource type
+    }
 
+    if(file.type === "application/octet-stream" || file.type === "text/csv") {
+      uploadLogic =  {
+        public_id: `${uid()}.${fileExtension}`,
+       folder: "services",
+       resource_type: "auto", // Automatically detect the resource type
+     }
+    }
     return new Promise((resolve) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          folder: "services",
-          resource_type: "auto", // Automatically detect the resource type
-        },
+        uploadLogic
+       ,
         (error, result) => {
           if (error) {
             console.error("Cloudinary upload error:", error);

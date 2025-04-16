@@ -16,7 +16,7 @@ const fileSchema = z.object({
 });
 
 const baseSchema = z.object({
-  serviceType: z.enum(["cnc-machining", "laser-cutting", "designing"]),
+  serviceType: z.enum(["cnc-machining", "laser-cutting", "3d-printing"]),
   material: z.string().min(1, "Material is required"),
   surfaceFinish: z.boolean(),
   quantity: z.number().min(1, "Quantity must be at least 1"),
@@ -24,31 +24,25 @@ const baseSchema = z.object({
   file: fileSchema.optional(),
 });
 
-const cncMachiningSchema = baseSchema.extend({
-  tolerance: z.string(),
-  threadingRequired: z.boolean(),
-});
 
-const laserCuttingSchema = baseSchema.extend({
-  thickness: z.string(),
-  cutType: z.enum(["standard", "engraving", "marking"]),
-});
+
+
 
 const designingSchema = baseSchema.extend({
-  designType: z.enum(["2d", "3d"]),
-  revisions: z.number(),
+  printType: z.enum(["fdm", "sla"]),
+  color: z.string(),
+  material: z.string(),
 });
 
 // ----------------------
 // Type Inference from Schemas
 // ----------------------
 type BaseFormData = z.infer<typeof baseSchema>;
-type CNCFormData = z.infer<typeof cncMachiningSchema>;
-type LaserFormData = z.infer<typeof laserCuttingSchema>;
+
 type DesignFormData = z.infer<typeof designingSchema>;
 
 // Union type for all supported forms
-type ServiceFormData = CNCFormData | LaserFormData | DesignFormData;
+type ServiceFormData = DesignFormData | BaseFormData;
 
 // ----------------------
 // API Route Handler
@@ -60,21 +54,15 @@ export async function POST(request: Request) {
         if (!session || !session.user || !session.user.id) {
           return error404("Missing user ID in the session.", { user: null });
         }
-    let validatedData: ServiceFormData;
+    let validatedData:ServiceFormData;
 
     // Dynamically validate based on serviceType
     switch (body.serviceType) {
-      case "cnc-machining":
-        validatedData = cncMachiningSchema.parse(body);
-        break;
-      case "laser-cutting":
-        validatedData = laserCuttingSchema.parse(body);
-        break;
-      case "designing":
+      case "3d-printing":
         validatedData = designingSchema.parse(body);
         break;
       default:
-        throw new Error(`Unsupported serviceType: ${body.serviceType}`);
+        validatedData = baseSchema.parse(body)
     }
 
     const fileData = validatedData.file || {};
@@ -92,6 +80,11 @@ export async function POST(request: Request) {
           quantity: validatedData.quantity,
           remarks: validatedData.remarks || "",
 
+          ...(validatedData.serviceType === "3d-printing" && "printType" in validatedData && {
+            printType: validatedData.printType,
+            color: validatedData.color,
+            material: validatedData.material,
+          }),
         },
       },
     });

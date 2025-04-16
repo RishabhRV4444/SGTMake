@@ -2,114 +2,37 @@
 import { useState } from "react"
 import type React from "react"
 
-import { Upload, CheckCircle, AlertCircle, Loader2, Plus, Minus } from "lucide-react"
-import { useForm, Controller } from "react-hook-form"
+import { Upload, CheckCircle, AlertCircle, Loader2 } from "lucide-react"
+import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Image from "next/image"
-
 import { useSession } from "next-auth/react"
 
 // Define allowed file types and max size
 const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB
-const ALLOWED_FILE_TYPES = ["image/"]
+const ALLOWED_FILE_TYPES = [
+  "application/pdf",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "image/jpeg",
+  "image/png",
+  "image/jpg",
+  "text/csv",
+]
 
 // Define the form schema
 const formSchema = z.object({
-  leftConnector: z.object({
-    housingPart: z.string().min(1, "Housing part is required"),
-    terminalPartNumber: z.string().min(1, "Terminal part number is required"),
-    additionalConnectors: z
-      .array(
-        z.object({
-          housingPart: z.string().optional(),
-          terminalPartNumber: z.string().optional(),
-        }),
-      )
-      .optional(),
-  }),
-  wire: z.object({
-    awg: z.string().min(1, "AWG is required"),
-    length: z.string().min(1, "Length is required"),
-    customLength: z.string().optional(),
-    customLengthUnit: z.string().optional(),
-    color: z.string().min(1, "Color is required"),
-    twisted: z.boolean().optional(),
-    customColor: z.string().optional(),
-  }),
-  rightConnector: z.object({
-    housingPart: z.string().min(1, "Housing part is required"),
-    terminalPartNumber: z.string().min(1, "Terminal part number is required"),
-    additionalConnectors: z
-      .array(
-        z.object({
-          housingPart: z.string().optional(),
-          terminalPartNumber: z.string().optional(),
-        }),
-      )
-      .optional(),
-  }),
   quantity: z.number().min(1, "Quantity must be at least 1"),
-  additionalNotes: z.string().optional(),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters")
+    .max(2000, "Description must be less than 2000 characters"),
 })
 
 type FormData = z.infer<typeof formSchema>
-
-// Housing part options
-const housingPartOptions = [
-  { value: "molex-mini-fit", label: "Molex Mini-Fit" },
-  { value: "molex-micro-fit", label: "Molex Micro-Fit" },
-  { value: "jst-xh", label: "JST XH" },
-  { value: "jst-ph", label: "JST PH" },
-  { value: "dupont", label: "Dupont" },
-]
-
-// Terminal part options
-const terminalPartOptions = [
-  { value: "crimp-female", label: "Crimp Female" },
-  { value: "crimp-male", label: "Crimp Male" },
-  { value: "solder-cup", label: "Solder Cup" },
-  { value: "pcb-mount", label: "PCB Mount" },
-]
-
-// AWG options
-const awgOptions = [
-  { value: "10", label: "10 AWG" },
-  { value: "12", label: "12 AWG" },
-  { value: "14", label: "14 AWG" },
-  { value: "16", label: "16 AWG" },
-  { value: "18", label: "18 AWG" },
-  { value: "20", label: "20 AWG" },
-  { value: "22", label: "22 AWG" },
-  { value: "24", label: "24 AWG" },
-  { value: "26", label: "26 AWG" },
-  { value: "28", label: "28 AWG" },
-  { value: "30", label: "30 AWG" },
-]
-
-// Length options
-const lengthOptions = [
-  { value: "10cm", label: "10 cm" },
-  { value: "20cm", label: "20 cm" },
-  { value: "30cm", label: "30 cm" },
-  { value: "50cm", label: "50 cm" },
-  { value: "1m", label: "1 meter" },
-  { value: "2m", label: "2 meters" },
-  { value: "3m", label: "3 meters" },
-  { value: "5m", label: "5 meters" },
-  { value: "custom", label: "Custom Length" },
-]
-
-// Color options
-const colorOptions = [
-  { value: "black", label: "Black" },
-  { value: "red", label: "Red" },
-  { value: "blue", label: "Blue" },
-  { value: "green", label: "Green" },
-  { value: "yellow", label: "Yellow" },
-  { value: "white", label: "White" },
-  { value: "custom", label: "Custom Color" },
-]
 
 export default function WiringHarnessForm() {
   const [file, setFile] = useState<File | null>(null)
@@ -124,58 +47,28 @@ export default function WiringHarnessForm() {
   } | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [submittedServiceId, setSubmittedServiceId] = useState<string | null>(null)
-  const [leftAdditionalConnectors, setLeftAdditionalConnectors] = useState<{ id: string }[]>([])
-  const [rightAdditionalConnectors, setRightAdditionalConnectors] = useState<{ id: string }[]>([])
 
-  const session = useSession();
+  const session = useSession()
 
   const {
     register,
     handleSubmit,
-    control,
-    watch,
-    setValue,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      leftConnector: {
-        housingPart: "",
-        terminalPartNumber: "",
-        additionalConnectors: [],
-      },
-      wire: {
-        awg: "",
-        length: "",
-        customLength: "",
-        customLengthUnit: "mm",
-        color: "",
-        twisted: false,
-        customColor: "",
-      },
-      rightConnector: {
-        housingPart: "",
-        terminalPartNumber: "",
-        additionalConnectors: [],
-      },
       quantity: 1,
+      description: "",
     },
   })
-
-  const wireColor = watch("wire.color")
-  const wireLength = watch("wire.length")
-  const customLengthUnit = watch("wire.customLengthUnit")
-  const wireCustomColor = watch("wire.customColor")
-  const wireTwisted = watch("wire.twisted")
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const uploadedFile = e.target.files[0]
 
       // Check file type
-      const isAllowedType = ALLOWED_FILE_TYPES.some(
-        (type) => uploadedFile.type.includes(type) || (type.endsWith("/") && uploadedFile.type.startsWith(type)),
-      )
+      console.log(uploadedFile.type)
+      const isAllowedType = ALLOWED_FILE_TYPES.includes(uploadedFile.type)
 
       if (!isAllowedType || uploadedFile.size > MAX_FILE_SIZE) {
         setErrorMessage("Invalid file type or size exceeds 100MB")
@@ -218,16 +111,6 @@ export default function WiringHarnessForm() {
     }
   }
 
-  const addLeftConnector = () => {
-    const newId = `left-${Date.now()}`
-    setLeftAdditionalConnectors([...leftAdditionalConnectors, { id: newId }])
-  }
-
-  const addRightConnector = () => {
-    const newId = `right-${Date.now()}`
-    setRightAdditionalConnectors([...rightAdditionalConnectors, { id: newId }])
-  }
-
   const onSubmit = async (data: FormData) => {
     setFormStatus("submitting")
 
@@ -258,43 +141,29 @@ export default function WiringHarnessForm() {
     }
   }
 
-  const removeLeftConnector = (idToRemove: string) => {
-    setLeftAdditionalConnectors(leftAdditionalConnectors.filter((connector) => connector.id !== idToRemove))
-
-    // Update the form data to remove this connector
-    const currentAdditionalConnectors = [...(watch("leftConnector.additionalConnectors") || [])]
-    const indexToRemove = leftAdditionalConnectors.findIndex((c) => c.id === idToRemove)
-
-    if (indexToRemove !== -1) {
-      currentAdditionalConnectors.splice(indexToRemove, 1)
-      setValue("leftConnector.additionalConnectors", currentAdditionalConnectors)
-    }
-  }
-
-  const removeRightConnector = (idToRemove: string) => {
-    setRightAdditionalConnectors(rightAdditionalConnectors.filter((connector) => connector.id !== idToRemove))
-
-    // Update the form data to remove this connector
-    const currentAdditionalConnectors = [...(watch("rightConnector.additionalConnectors") || [])]
-    const indexToRemove = rightAdditionalConnectors.findIndex((c) => c.id === idToRemove)
-
-    if (indexToRemove !== -1) {
-      currentAdditionalConnectors.splice(indexToRemove, 1)
-      setValue("rightConnector.additionalConnectors", currentAdditionalConnectors)
-    }
-  }
-
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-semibold mb-6">Wiring Harness</h1>
+      {/* Header Image */}
+      <div className="w-full h-48 md:h-64 mb-6 relative rounded-xl overflow-hidden">
+        <Image
+          src="/wireHarnessBanner.jpg"
+          alt="Wiring Harness Header"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+          <h1 className="text-3xl md:text-4xl font-bold text-white">Wiring Harness</h1>
+        </div>
+      </div>
 
       {formStatus === "success" ? (
         <div className="bg-green-50 p-6 rounded-xl border border-green-200 text-center">
           <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-medium text-green-800 mb-2">Thanks {session.data?.user?.name } for Order Successfully </h2>
-          <p className="text-green-700 mb-2">
-           We will get back to you soon with a quote.
-          </p>
+          <h2 className="text-2xl font-medium text-green-800 mb-2">
+            Thanks {session.data?.user?.name || "for your order"}
+          </h2>
+          <p className="text-green-700 mb-2">We will get back to you soon with a quote.</p>
           {submittedServiceId && <p className="text-green-700 mb-4">Service ID: {submittedServiceId}</p>}
           <button
             onClick={() => window.location.reload()}
@@ -312,7 +181,7 @@ export default function WiringHarnessForm() {
               id="file"
               className="hidden"
               onChange={handleFileUpload}
-              accept="image/*"
+              accept=".docx,.pdf,.jpg,.jpeg,.png,.xls,.xlsx,.csv"
               disabled={fileUploadStatus === "uploading" || formStatus === "submitting"}
             />
 
@@ -365,45 +234,42 @@ export default function WiringHarnessForm() {
             )}
 
             {fileUploadStatus === "idle" && !file && (
-              <p className="mt-2 text-sm text-gray-500">Upload Images of Harness</p>
+              <div className="mt-2 text-sm text-gray-500 max-w-md px-4">
+                <p className="mb-2">Support uploading cable pictures, cable drawings, and cable specifications</p>
+                <p>Supports .docx, .pdf, .jpg, .jpeg, .png, .xls, .xlsx, and .csv</p>
+              </div>
             )}
           </div>
-          {/* 
-          <div className="mb-8">
-            <button className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600" onClick={() => {}}>
-              Get a Quote
-            </button>
-          </div> */}
 
           {/* Our Process */}
           <div className="mb-8">
             <h2 className="text-2xl font-semibold mb-4 ">Our Process</h2>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4 font-semibold">
-              <div className="bg-[#FAFAFA] py-10 rounded-lg border text-center ">
+            <div className="grid grid-cols-3 md:grid-cols-5 gap-4 font-semibold">
+              <div className="bg-[#FAFAFA] py-5 sm:py-10 rounded-lg border text-center ">
                 <div className="flex justify-center mb-2">
                   <Image src="/customcable.png" alt="Custom Cables" width={60} height={60} />
                 </div>
                 <p className="text-sm">Custom Cables</p>
               </div>
-              <div className=" py-10 bg-[#FAFAFA] rounded-lg border text-center">
+              <div className=" py-5 sm:py-10 bg-[#FAFAFA] rounded-lg border text-center">
                 <div className="flex justify-center mb-2">
                   <Image src="/confirmplan.png" alt="Confirm Plan" width={60} height={60} />
                 </div>
                 <p className="text-sm">Confirm Plan</p>
               </div>
-              <div className=" py-10 bg-[#FAFAFA] rounded-lg border text-center">
+              <div className=" py-5 sm:py-10 bg-[#FAFAFA] rounded-lg border text-center">
                 <div className="flex justify-center mb-2">
                   <Image src="/production.png" alt="In Production" width={60} height={60} />
                 </div>
                 <p className="text-sm">In Production</p>
               </div>
-              <div className=" py-10 bg-[#FAFAFA] rounded-lg border text-center">
+              <div className=" py-5 sm:py-10 bg-[#FAFAFA] rounded-lg border text-center">
                 <div className="flex justify-center mb-2">
                   <Image src="/transpot.png" alt="Transportation" width={60} height={60} />
                 </div>
                 <p className="text-sm">Transportation</p>
               </div>
-              <div className=" py-10 bg-[#FAFAFA] rounded-lg border text-center">
+              <div className=" py-5 sm:py-10 bg-[#FAFAFA] rounded-lg border text-center">
                 <div className="flex justify-center mb-2">
                   <Image src="/delivered.png" alt="Delivered" width={60} height={60} />
                 </div>
@@ -414,362 +280,47 @@ export default function WiringHarnessForm() {
 
           {/* Form Fields */}
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="bg-white  rounded-lg  mb-6">
-              <h2 className="text-2xl font-semibold mb-4">Cable Selection</h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Please fill the part number according to your cable requirements. If you are not sure about the specific
-                part number of the housing,
-                <span className="text-orange-500 cursor-pointer"> Click here.</span>
-              </p>
-
-              {/* Left Connector */}
-              <div className="mb-6 p-6 bg-[#FAFAFA] border">
-                <h3 className="font-semibold text-xl mb-2  ">Left connector</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm mb-1">Housing Part</label>
-                    <select
-                      {...register("leftConnector.housingPart")}
-                      className="w-full border p-2 rounded-md bg-[#FAFAFA]"
-                    >
-                      <option value="">Select</option>
-                      {housingPartOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.leftConnector?.housingPart && (
-                      <p className="text-red-500 text-xs mt-1">{errors.leftConnector.housingPart.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-1">Terminal Part Number</label>
-                    <select
-                      {...register("leftConnector.terminalPartNumber")}
-                      className="w-full border p-2 rounded-md bg-[#FAFAFA]"
-                    >
-                      <option value="">Select</option>
-                      {terminalPartOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.leftConnector?.terminalPartNumber && (
-                      <p className="text-red-500 text-xs mt-1">{errors.leftConnector.terminalPartNumber.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-1">Add New Connector</label>
-                    <button
-                      type="button"
-                      onClick={addLeftConnector}
-                      className="flex items-center text-orange-500 border border-orange-500 rounded-md px-2 py-1"
-                    >
-                      <Plus className="w-4 h-4 mr-1" /> Add
-                    </button>
-                  </div>
-                </div>
-
-                {leftAdditionalConnectors.map((connector, index) => (
-                  <div key={connector.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                    <div>
-                      <label className="block text-sm mb-1">Housing Part</label>
-                      <select
-                        {...register(`leftConnector.additionalConnectors.${index}.housingPart` as const)}
-                        className="w-full border p-2 rounded-md bg-[#FAFAFA]"
-                      >
-                        <option value="">Select</option>
-                        {housingPartOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm mb-1">Terminal Part Number</label>
-                      <select
-                        {...register(`leftConnector.additionalConnectors.${index}.terminalPartNumber` as const)}
-                        className="w-full border p-2 rounded-md bg-[#FAFAFA]"
-                      >
-                        <option value="">Select</option>
-                        {terminalPartOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm mb-1">Remove</label>
-                      <button
-                        type="button"
-                        onClick={() => removeLeftConnector(connector.id)}
-                        className="flex items-center text-red-500 border border-red-500 rounded-md px-2 py-1"
-                      >
-                        <Minus className="w-4 h-4 mr-1" /> Remove
-                      </button>
-                    </div>
-                  </div>
-                ))}
+            <div className="bg-white p-6 rounded-lg border mb-6">
+              <h2 className="text-xl font-semibold mb-4">Notes:</h2>
+              <div className="mb-6 text-gray-700">
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>Upload the file in above section</li>
+                  <li>.xls or .xlsx file is most preferred with images for proper understanding</li>
+                  <li>Mention Connector names for left and right side in the description box</li>
+                  <li>For only connector on one side and wire end at other side mention clearly</li>
+                  <li>Mention wire length and color coding in the file you upload</li>
+                  <li>Mention Quantity of set of harness required in description box</li>
+                  <li>Type of electrical tape required on harness mention in Description box or in file</li>
+                  <li>Extra requirement you can mention in the description box below</li>
+                </ul>
               </div>
 
-              {/* Wire */}
-              <div className="mb-6 p-6 bg-[#FAFAFA] border">
-                <h3 className="font-medium mb-2">Wire</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                  <div>
-                    <label className="block text-sm mb-1">AWG</label>
-                    <select {...register("wire.awg")} className="w-full border p-2 rounded-md bg-[#FAFAFA]">
-                      <option value="">Select</option>
-                      {awgOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.wire?.awg && <p className="text-red-500 text-xs mt-1">{errors.wire.awg.message}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-1">Length</label>
-                    <select {...register("wire.length")} className="w-full border p-2 rounded-md bg-[#FAFAFA]">
-                      <option value="">Select</option>
-                      {lengthOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.wire?.length && <p className="text-red-500 text-xs mt-1">{errors.wire.length.message}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-1">Color</label>
-                    <select {...register("wire.color")} className="w-full border p-2 rounded-md bg-[#FAFAFA]">
-                      <option value="">Select</option>
-                      {colorOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.wire?.color && <p className="text-red-500 text-xs mt-1">{errors.wire.color.message}</p>}
-                  </div>
-                </div>
-
-                {wireLength === "custom" && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div className="flex items-center gap-2">
-                      <div className="flex-grow">
-                        <label className="block text-sm mb-1">Custom Length</label>
-                        <input
-                          type="number"
-                          {...register("wire.customLength")}
-                          placeholder="Enter length"
-                          className="w-full border p-2 rounded-md bg-[#FAFAFA]"
-                        />
-                      </div>
-                      <div className="w-24 mt-6">
-                        <select
-                          {...register("wire.customLengthUnit")}
-                          className="w-full border p-2 rounded-md bg-[#FAFAFA]"
-                        >
-                          <option value="mm">mm</option>
-                          <option value="cm">cm</option>
-                          <option value="m">m</option>
-                          <option value="in">in</option>
-                          <option value="ft">ft</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm mb-1">Twisted</label>
-                    <div className="flex space-x-4">
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          value="yes"
-                          checked={wireTwisted === true}
-                          onChange={() => setValue("wire.twisted", true)}
-                          className="mr-2"
-                        />
-                        Yes
-                      </label>
-                      <label className="flex items-center">
-                        <input
-                          type="radio"
-                          value="no"
-                          checked={wireTwisted === false}
-                          onChange={() => setValue("wire.twisted", false)}
-                          className="mr-2"
-                        />
-                        No
-                      </label>
-                    </div>
-                  </div>
-
-                  {wireColor === "custom" && (
-                    <div>
-                      <label className="block text-sm mb-1">Customize Color</label>
-                      <input
-                        type="text"
-                        {...register("wire.customColor")}
-                        placeholder="Enter Color"
-                        className="w-full border p-2 rounded-md bg-[#FAFAFA]"
-                      />
-                    </div>
-                  )}
-                </div>
+              <div className="mb-6">
+                <h3 className="font-medium mb-2">Description Box</h3>
+                <textarea
+                  {...register("description")}
+                  className="w-full border p-3 rounded-md bg-[#FAFAFA]"
+                  rows={6}
+                  placeholder="Describe your harness specification and other requirements here."
+                ></textarea>
+                {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>}
               </div>
 
-              {/* Right Connector */}
-              <div className="mb-6 p-6 bg-[#FAFAFA] border">
-                <h3 className="font-medium mb-2">Right connector</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-sm mb-1">Housing Part</label>
-                    <select
-                      {...register("rightConnector.housingPart")}
-                      className="w-full border p-2 rounded-md bg-[#FAFAFA]"
-                    >
-                      <option value="">Select</option>
-                      {housingPartOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.rightConnector?.housingPart && (
-                      <p className="text-red-500 text-xs mt-1">{errors.rightConnector.housingPart.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-1">Terminal Part Number</label>
-                    <select
-                      {...register("rightConnector.terminalPartNumber")}
-                      className="w-full border p-2 rounded-md bg-[#FAFAFA]"
-                    >
-                      <option value="">Select</option>
-                      {terminalPartOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.rightConnector?.terminalPartNumber && (
-                      <p className="text-red-500 text-xs mt-1">{errors.rightConnector.terminalPartNumber.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="block text-sm mb-1">Add New Connector</label>
-                    <button
-                      type="button"
-                      onClick={addRightConnector}
-                      className="flex items-center text-orange-500 border border-orange-500 rounded-md px-2 py-1"
-                    >
-                      <Plus className="w-4 h-4 mr-1" /> Add
-                    </button>
-                  </div>
-                </div>
-
-                {rightAdditionalConnectors.map((connector, index) => (
-                  <div key={connector.id} className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                    <div>
-                      <label className="block text-sm mb-1">Housing Part</label>
-                      <select
-                        {...register(`rightConnector.additionalConnectors.${index}.housingPart` as const)}
-                        className="w-full border p-2 rounded-md bg-[#FAFAFA]"
-                      >
-                        <option value="">Select</option>
-                        {housingPartOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm mb-1">Terminal Part Number</label>
-                      <select
-                        {...register(`rightConnector.additionalConnectors.${index}.terminalPartNumber` as const)}
-                        className="w-full border p-2 rounded-md bg-[#FAFAFA]"
-                      >
-                        <option value="">Select</option>
-                        {terminalPartOptions.map((option) => (
-                          <option key={option.value} value={option.value}>
-                            {option.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm mb-1">Remove</label>
-                      <button
-                        type="button"
-                        onClick={() => removeRightConnector(connector.id)}
-                        className="flex items-center text-red-500 border border-red-500 rounded-md px-2 py-1"
-                      >
-                        <Minus className="w-4 h-4 mr-1" /> Remove
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Quantity */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div className="bg-white p-6 rounded-lg border mb-6">
-                <h2 className="text-xl font-semibold mb-4">Quantity (pcs)</h2>
-                <div className="flex items-center">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const currentQuantity = watch("quantity")
-                      if (currentQuantity > 1) {
-                        setValue("quantity", currentQuantity - 1)
-                      }
-                    }}
-                    className="border rounded-md p-2"
-                    disabled={watch("quantity") <= 1}
-                  >
-                    <Minus className="w-4 h-4" />
-                  </button>
-                  <Controller
-                    name="quantity"
-                    control={control}
-                    render={({ field }) => (
-                      <input
-                        type="number"
-                        {...field}
-                        onChange={(e) => field.onChange(Number.parseInt(e.target.value) || 1)}
-                        min="1"
-                        className="w-16 text-center mx-2 border rounded-md p-2"
-                      />
-                    )}
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="font-medium mb-2">Quantity</h3>
+                  <input
+                    type="number"
+                    {...register("quantity", { valueAsNumber: true })}
+                    min="1"
+                    className="w-24 border p-2 rounded-md bg-[#FAFAFA]"
                   />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const currentQuantity = watch("quantity")
-                      setValue("quantity", currentQuantity + 1)
-                    }}
-                    className="border rounded-md p-2"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
+                  {errors.quantity && <p className="text-red-500 text-xs mt-1">{errors.quantity.message}</p>}
                 </div>
-                {errors.quantity && <p className="text-red-500 text-xs mt-1">{errors.quantity.message}</p>}
-              </div>
-              <div className="flex justify-end items-center">
+
                 <button
                   type="submit"
-                  className="mt-6 bg-orange-500 text-white px-6 py-2  hover:bg-orange-600 flex items-center justify-center disabled:bg-gray-400 disabled:cursor-not-allowed w-max rounded-full h-min  "
+                  className="bg-orange-500 text-white px-6 py-2 rounded-full hover:bg-orange-600 flex items-center justify-center disabled:bg-gray-400 disabled:cursor-not-allowed"
                   disabled={formStatus === "submitting" || fileUploadStatus === "uploading"}
                 >
                   {formStatus === "submitting" ? (
@@ -778,12 +329,20 @@ export default function WiringHarnessForm() {
                       Submitting...
                     </>
                   ) : (
-                    "Confirm Cable Plan"
+                    "Submit Request"
                   )}
                 </button>
               </div>
             </div>
-        
+
+            {errorMessage && formStatus === "error" && (
+              <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md text-red-600">
+                <p className="flex items-center">
+                  <AlertCircle className="w-5 h-5 mr-2" />
+                  {errorMessage}
+                </p>
+              </div>
+            )}
           </form>
         </>
       )}
