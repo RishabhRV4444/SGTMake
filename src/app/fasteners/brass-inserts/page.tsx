@@ -9,4 +9,4 @@ export default function BrassInsertsPage() {
   const activeCategory = pathname.split("/").pop() || ""
 
   return <FastenerSelector config={brassInsertConfig} activeCategory={activeCategory} />
-}
+} 
